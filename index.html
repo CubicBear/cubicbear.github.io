@@ -153,29 +153,6 @@ We show that the exterior algebra \(\Lambda_{\mathbb{R}}[a_1,\cdots,a_n]\), whic
    
   
 
-<script>
-var titleElements = document.querySelectorAll('.title');
-titleElements.forEach(function (element) {
-  element.addEventListener('click', function () {showabstract(element);});
-}); // "element" can be "this"
-
-var abstractElements = document.querySelectorAll('.abstract');
-abstractElements.forEach(function (element) {
-  element.style.display = "none";
-  element.style.color = "DarkGreen";
-  element.addEventListener('dblclick', function () {
-    showabstract(element);
-  });
-  element.addEventListener('click', function () {});
-});
-
-function showabstract(element) {
-  var abstractElement = element.parentElement.querySelector('.abstract');
-  if (abstractElement) {
-    abstractElement.style.display = (abstractElement.style.display === "none") ? "" : "none";
-  }
-}
-</script>
 
 <h2>Seminars and Notes</h2>
   
@@ -212,6 +189,30 @@ function showabstract(element) {
 A small package of LaTeX to draw Young diagrams.</li>
 </ul>
 
+
+<script>
+var titleElements = document.querySelectorAll('.title');
+titleElements.forEach(function (element) {
+  element.addEventListener('click', function () {showabstract(element);});
+}); // "element" can be "this"
+
+var abstractElements = document.querySelectorAll('.abstract');
+abstractElements.forEach(function (element) {
+  element.style.display = "none";
+  element.style.color = "DarkGreen";
+  element.addEventListener('dblclick', function () {
+    showabstract(element);
+  });
+  element.addEventListener('click', function () {});
+});
+
+function showabstract(element) {
+  var abstractElement = element.parentElement.querySelector('.abstract');
+  if (abstractElement) {
+    abstractElement.style.display = (abstractElement.style.display === "none") ? "" : "none";
+  }
+}
+</script>
 
 </body>
 </html>
