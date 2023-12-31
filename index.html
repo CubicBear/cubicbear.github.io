@@ -4,9 +4,29 @@
   <style>
     body {color:#202040;background-color: #F6F6F6;padding:5%}
     h1 {text-align:center;}
-    h2 {color:#F6F6F6;background-color:DarkSlateGray;}
+    h2 {color:#F6F6F6;background-color:DarkSlateGray;;padding:1%}
     a:link  {color:DarkBlue}
   </style>
+
+
+
+   <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>
+   <script type="text/javascript">
+      MathJax = {
+         tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true  // 处理$等转义字符
+         },
+         svg: {
+            fontCache: 'global'
+         }
+      };
+   </script>
+
+  
 <meta>
 <title>Rui Xiong</title>
 </head>
@@ -32,63 +52,135 @@ My research interest is <a href="https://en.wikipedia.org/wiki/Algebraic_combina
 
 <h2>Publications and Preprints</h2>
 
+<script>
+  function showabstract(element){
+    x=element.parentElement.children[3];
+    //element.innerHTML=x
+    if(x.style.display=="none"){
+      x.style.display=""
+    }else{
+      x.style.display="none"
+    }
+  }
+  </script>
+ 
 <ol reversed>
   
-  <li><b >in preparation...</b></li>
-  <li><b>On the Peterson subalgebra and its dual</b>
-    [<a href="https://arxiv.org/abs/2312.03965">arXiv</a>]
-    <br>Rui Xiong, 
-    <a href="https://www.albany.edu/~cz954339/">Changlong Zhong</a> and 
-    <a href="https://kirillmath.ca/">Kirill Zaynullin</a>
+  <li><b>in preparation...</b></li>
+  
+  <li>
+   <b onclick="showabstract(this)">
+   <!--title-->
+   On the Peterson subalgebra and its dual</b> 
+     <span>
+   <!--source-->
+   [<a href="https://arxiv.org/abs/2312.03965">arXiv</a>]</span>
+     <span><br>
+   <!--authors-->
+   Rui Xiong, <a href="https://www.albany.edu/~cz954339/">Changlong Zhong</a> and <a href="https://kirillmath.ca/">Kirill Zaynullin</a></span>
+     <cite ondblclick="showabstract(this)" style="display:none;color:DarkGreen"><br>
+   <!--abstract-->
+In the present notes, we study a generalization of the Peterson subalgebra to an oriented (generalized) cohomology theory which we call the formal Peterson subalgebra. Observe that by recent results of Zhong the dual of the formal Peterson algebra provides an algebraic model for the oriented cohomology of the affine Grassmannian.<br>
+Our first result shows that the centre of the formal affine Demazure algebra generates the formal Peterson subalgebra. Our second observation is motivated by the Peterson conjecture. We show that a certain localization of the formal Peterson subalgebra for the extended Dynkin diagram of type \(A^1\) provides an algebraic model for 'quantum' oriented cohomology of the projective line. Our last result can be viewed as an extension of the previous results on Hopf algebroids of structure algebras of moment graphs to the case of affine root systems. We prove that the dual of the formal Peterson subalgebra (an oriented cohomology of the affine Grassmannian) is the \(0\)th Hochshild homology of the formal affine Demazure algebra.
+</cite>
   </li>
 
-  <li><b>Bumpless pipe dreams meet puzzles</b> 
+  <li>
+   <b onclick="showabstract(this)">
+   <!--title-->
+    Bumpless pipe dreams meet puzzles</b> 
+     <span>
+   <!--source-->
     [<a href="https://arxiv.org/abs/2309.00467" >arXiv</a>]
     [<a href="/doc/PipiPuzzle.pdf">poster</a>]
     [<a href="/doc/puzzles_slides.pdf">talk</a>]
-   <br><a href="https://math.scu.edu.cn/info/1013/4291.htm">
-    Neil J.Y. Fan</a>, 
-    <a href="http://cfc.nankai.edu.cn/gl/main.htm">
-    Peter L. Guo</a> and Rui Xiong
+    </span>
+     <span><br>
+   <!--authors-->
+   <a href="https://math.scu.edu.cn/info/1013/4291.htm">Neil J.Y. Fan</a>, <a href="http://cfc.nankai.edu.cn/gl/main.htm">Peter L. Guo</a> and Rui Xiong</span>
+     <cite ondblclick="showabstract(this)" style="display:none;color:DarkGreen"><br>
+   <!--abstract-->
+Knutson and Zinn-Justin recently found a puzzle rule for the expansion of the product \(\mathfrak{G}_u(x,t)\cdot \mathfrak{G}_v(x,t)\) of two double Grothendieck polynomials indexed by permutations with separated descents. We establish its triple Schubert calculus version in the sense of Knutson and Tao, namely, a formula for expanding \(\mathfrak{G}_u(x,y)\cdot \mathfrak{G}_v(x,t)\) in different secondary variables. Our rule is formulated in terms of pipe puzzles, incorporating both the structures of bumpless pipe dreams and classical puzzles. As direct applications, we recover the separated-descent puzzle formula by Knutson and Zinn-Justin (by setting \(y=t\) and the bumpless pipe dream model of double Grothendieck polynomials by Weigandt (by setting \(v=\operatorname{id}\) and \(x=t\)). Moreover, we utilize the formula to partially confirm a positivity conjecture of Kirillov about applying a skew operator to a Schubert polynomial.
+</cite>
   </li>
   
-  <li><b>Automorphisms of the Quantum Cohomology of the Springer Resolution and Applications</b> 
+  <li><b onclick="showabstract(this)">
+   <!--title-->
+    Automorphisms of the Quantum Cohomology of the Springer Resolution and Applications</b>
+     <span>
+   <!--source-->
     [<a href="https://arxiv.org/abs/2304.07173">arXiv</a>]
     [<a href="/doc/CotQum.pdf">poster</a>]
     [<a href="/doc/CMS_QHTFDL.pdf">talk</a>]
-   <br>
+    </span>
+     <span><br>
+   <!--authors-->
     <a href="https://ymsc.tsinghua.edu.cn/en/info/1033/2312.htm">
-    Changjian Su</a>, 
-    <a href="https://math.sysu.edu.cn/gagp/czli">
-    Changzheng Li</a> and Rui Xiong
+    Changjian Su</a>, <a href="https://math.sysu.edu.cn/gagp/czli">
+    Changzheng Li</a> and Rui Xiong</span>
+     <cite ondblclick="showabstract(this)" style="display:none;color:DarkGreen"><br>
+   <!--abstract-->
+In this paper, we introduce quantum Demazure--Lusztig operators acting by ring automorphisms on the equivariant quantum cohomology of the Springer resolution. Our main application is a presentation of the torus-equivariant quantum cohomology in terms of generators and relations. We provide explicit descriptions for the classical types. We also recover Kim's earlier results for the complete flag varieties by taking the Toda limit.
+</cite>
   </li>
   
   
-  <li><b>Structure algebras, Hopf algebroids and oriented cohomology of a group</b>
+  <li><b onclick="showabstract(this)">
+   <!--title-->
+    Structure algebras, Hopf algebroids and oriented cohomology of a group</b>
+     <span>
+   <!--source-->
     [<a href="https://arxiv.org/abs/2303.02409">arXiv</a>]
  <span style = "display:none;"> [<a href="/doc/coprod.pdf">poster</a>]</span>
     [<a href="/doc/CMS_coprod.pdf">talk</a>]
-   <br>
+    </span>
+     <span><br>
+   <!--authors-->
     <a href="https://sites.google.com/site/martinalanini5/home">
     Martina Lanini</a>, Rui Xiong and 
     <a href="https://kirillmath.ca/">
-    Kirill Zaynullin</a>
+    Kirill Zaynullin</a></span>
+     <cite ondblclick="showabstract(this)" style="display:none;color:DarkGreen"><br>
+   <!--abstract-->
+We prove that the structure algebra of a Bruhat moment graph of a finite real root system is a Hopf algebroid with respect to the Hecke and the Weyl actions. We introduce new techniques (reconstruction and push-forward formula of a product, twisted coproduct, double quotients of bimodules) and apply them together with our main result to linear algebraic groups, to generalized Schubert calculus, to combinatorics of Coxeter groups and finite real root systems. As for groups, it implies that the natural Hopf-algebra structure on the algebraic oriented cohomology \(h(G)\) of Levine-Morel of a split semi-simple linear algebraic group G can be lifted to a 'bi-Hopf' structure on the T-equivariant algebraic oriented cohomology of the complete flag variety. As for the Schubert calculus, we prove several new identities involving (double) generalized equivariant Schubert classes. As for finite real root systems, we compute the Hopf-algebra structure of 'virtual cohomology' of dihedral groups \(I_2(p)\), where \(p\) is an odd prime.
+</cite>
   </li>
   
-  <li><b>Pieri and Murnaghan–Nakayama type Rules for Chern classes of Schubert Cells</b>
+  <li><b onclick="showabstract(this)">
+   <!--title-->
+    Pieri and Murnaghan–Nakayama type Rules for Chern classes of Schubert Cells</b>
+     <span>
+   <!--source-->
     [<a href="https://arxiv.org/abs/2211.06802">arXiv</a>]
     [<a href="/doc/CSMdomino.pdf">poster</a>]
     [<a href="/doc/Domino.pdf">talk</a>]
-   <br>
+    </span>
+     <span><br>
+   <!--authors-->
     <a href="https://math.scu.edu.cn/info/1013/4291.htm">
     Neil J.Y. Fan</a>,
     <a href="http://cfc.nankai.edu.cn/gl/main.htm">
-    Peter L. Guo</a> and Rui Xiong
+    Peter L. Guo</a> and Rui Xiong</span>
+     <cite ondblclick="showabstract(this)" style="display:none;color:DarkGreen"><br>
+   <!--abstract-->
+We develop Pieri type as well as Murnaghan--Nakayama type formulas for equivariant Chern--Schwartz--MacPherson classes of Schubert cells in the classical flag variety. These formulas include as special cases many previously known multiplication formulas for Chern--Schwartz--MacPherson classes or Schubert classes. We apply the equivariant Murnaghan--Nakayama formula to the enumeration of rim hook tableaux.
+</cite>
   </li>
   
-  <li><b>Equivariant log-concavity and equivariant Kähler packages</b>
-    [<a href="https://arxiv.org/abs/2205.05420">arXiv</a>]
+  <li><b onclick="showabstract(this)">
+   <!--title-->
+    Equivariant log-concavity and equivariant Kähler packages</b>
+     <span>
+   <!--source-->
+    [<a href="https://arxiv.org/abs/2205.05420">arXiv</a>]</span>
+     <span>
+   <!--authors-->
    <br><a href="https://www.researchgate.net/profile/Tao-Gui-4">Tao Gui</a> and Rui Xiong
+    </span>
+     <cite ondblclick="showabstract(this)" style="display:none;color:DarkGreen"><br>
+   <!--abstract-->
+We show that the exterior algebra \(\Lambda_{\mathbb{R}}[a_1,\cdots,a_n]\), which is the cohomology of the torus \(T=(S^1)^n\), and the polynomial ring \(\mathbb{R}[t_1,\cdots,t_n]\), which is the cohomology of the classifying space \(B(S^1)^n=(\mathbb{C}P^\infty)^n\), are \(S_n\)-equivariantly log-concave. We do so by explicitly giving the \(S_n\)-representation maps on the appropriate sequences of tensor products of polynomials or exterior powers and proving that these maps satisfy the hard Lefschetz theorem. Furthermore, we prove that the whole Kähler package, including algebraic analogies of the Poincaré duality, hard Lefschetz, and Hodge-Riemann bilinear relations, holds on the corresponding sequences in an equivariant setting.
+</cite>
   </li>
   
   
