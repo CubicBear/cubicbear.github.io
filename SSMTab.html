@@ -16,20 +16,24 @@
           evalButtonText: 'Evaluate'});
 </script>
 <style>
-  @font-face {
+/*   @font-face {
     font-family: "mononoki";
     src: url("/font/mononoki-Regular.ttf");
-  }
-    * {
-    font-family: "mononoki"; !important;
-  }
+  } */
+    body {color:#202040;background-color: #F6F6F6;padding:5%}
+    h1 {text-align:center;}
+    h2 {color:#F6F6F6;background-color:DarkSlateGray;;padding:1%}
+    a:link  {color:DarkBlue}
+   * {
+    font-family: "consolas",monospace; !important
+  } 
   </style>
 
 </head>
 <body>
 
-<h2>Tableaux for SSM classes (new) </h2>
-
+<h2>Tableaux for SSM classes</h2>
+  
 <div id="Activate" visibility: hidden>
   <script type="text/x-sage">
 def a_tile(l,d): # yield (r,u), the R-matrix
@@ -97,38 +101,38 @@ def tiles_printer(tiless,style="PD"):
     width = len(tiless[-1])
     for tiles in tiless:
         for tile in tiles: 
-            if tile[0] in [0,1]: label_print="--"; 
-            else: label_print=" "+str(tile[0]);
+            if tile[0] in [0,1]: label_print="-"; 
+            else: label_print=str(tile[0]);
             res+="+-"+label_print+"-"
         res+="+\n"
         for tile in tiles: 
             (u,d,l,r)=tile
             if u==d==l==r==0:
-                if style =="PD": tile_print=" 　 "
-                else: tile_print="-─-"
+                if style =="PD": tile_print="   "
+                else: tile_print="───"
             elif u==l>0 and r==d==0:
-                if style =="PD": tile_print="-╯ "
-                else: tile_print=" └-"
+                if style =="PD": tile_print="─╯ "
+                else: tile_print=" └─"
             elif u==l==0 and r==d>0:
-                if style =="PD": tile_print=" ╭-"
-                else: tile_print="-┐ "
+                if style =="PD": tile_print=" ╭─"
+                else: tile_print="─┐ "
             elif u==l>0 and r==d>0:
-                if style =="PD": tile_print="╯╭"
+                if style =="PD": tile_print="╯ ╭"
                 else: tile_print=" │ "
             elif u==d>0 and r==l>0:
-                if style =="PD": tile_print="-┼-"
+                if style =="PD": tile_print="─┼─"
                 else: tile_print=" │ "
                 if r>d:
                     information="motivic type"
             elif u==d>0 and l==r==0:
                 if style =="PD": tile_print=" │ "
-                else: tile_print="╮╰" #"┐└"
+                else: tile_print="╮ ╰" #"┐└"
                 information="motivic type"
             elif l==r>0 and u==d==0:
-                if style =="PD": tile_print="-─-"
-                else: tile_print=" 　 "
+                if style =="PD": tile_print="───"
+                else: tile_print="   "
             else:
-                tile_print=" ？ "
+                tile_print=" ? "
             if tile[2] in [0,1]: label_print="|"; 
             else: label_print=str(tile[2]);
             res+=label_print+tile_print
@@ -139,8 +143,8 @@ def tiles_printer(tiless,style="PD"):
     res=res[:-1]
     res+=" "+information+"\n"
     for tile in tiles: 
-        if tile[1] in [0,1]: label_print="--"; 
-        else: label_print=" "+str(tile[1]);
+        if tile[1] in [0,1]: label_print="-"; 
+        else: label_print=str(tile[1]);
         res+="+-"+label_print+"-"
     res+="+\n"
 #     res+=information
