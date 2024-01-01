@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'mononoki';
-  src: url('path/to/mononoki.woff2') format('woff2'),
-       url('path/to/mononoki.woff') format('woff');
+  src: url('/font/mononoki-Regular.ttf') format('ttf'),
+       url('/font/mononoki-Regular.otf') format('otf');
   /* 添加其他字体格式，以提高兼容性 */
 }
 
