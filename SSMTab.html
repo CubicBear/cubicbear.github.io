@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles","fullScreen"], 
+          evalButtonText: 'Evaluate'});
+</script>
+
+
+<h2>Tableaux for SSM classes</h2>
+
+<div id="Activate" visibility: hidden>
+  <script type="text/x-sage">
+def a_tile(l,d): # yield (r,u), the R-matrix
+    if l==d: 
+        yield (d,l)
+    if l>d: 
+        yield (d,l)
+        yield (l,d)
+    if l<d: 
+        yield (d,l)
+        yield (l,d) # only for SSM
+def row_tile(l,dd,given_r=None): # yield (r,uu,[tile1,tile2,...]); tile = (u,d,l,r)
+    if len(dd)==0: 
+        yield (l,[],[])
+        return
+    for (newl,u1) in a_tile(l,dd[0]): # u1 = first upper boundary; 
+        for (r,u2,tiles) in row_tile(newl,dd[1:]): # r = right boundary; u2 = the rest upper boundary
+            if given_r==None or r==given_r:
+                yield (r,[u1]+u2,[(u1,dd[0],l,newl)]+tiles)
+def col_tile(ll,dd,given_rr=None,given_uu=None,widths=None): # yield (rr,uu,[[tile11,..],[tile21,..],...]); tile = (u,d,l,r)
+    if widths==None: 
+        widths = [len(dd)]*len(ll) # every row has width = length of the lower boundary
+    if given_rr ==None: 
+        given_rr = [None]*len(ll)
+    if len(ll)==0: 
+        yield([],dd,[])
+        return 
+    for (r1,newdd,tiles) in row_tile(ll[-1],dd,given_rr[-1]): # r1 = last right boundary; 
+        if len(widths)>=2: 
+            newdd_cutted=newdd[:widths[-2]]
+        else: 
+            newdd_cutted=newdd
+        for (r2,uu,tiless) in col_tile(ll[:-1],newdd_cutted,given_rr[:-1],given_uu,widths[:-1]): # uu = upper boundary; r2= the rest right boundary
+            uu_filled = uu+newdd[len(uu):]
+            ifyield = False
+            if given_uu == None: 
+                ifyield = True
+            else:
+                ifyield = True
+                for i in range(len(uu_filled)): 
+                    if given_uu[i] != None and given_uu[i]!= uu_filled[i]: ifyield = False
+            if ifyield:
+                yield (r2+[r1],uu_filled,tiless+[tiles])
+def SSM_PD(ll,dd,boundary=None,widths=None):
+    given_rr=[]*(len(ll))
+    given_uu=[]*(len(dd))
+    if boundary==None: 
+        boundary = [None]*(len(ll)+len(dd)) 
+    if widths==None: 
+        widths = [len(dd)]*len(ll) # every row has width = length of the lower boundary
+    the_subset_of_r = [widths[i]+i for i in range(len(widths))]
+    for i in range(len(ll)+len(dd)):
+        if i in the_subset_of_r:
+            given_rr+=[boundary[i]]
+        else:
+            given_uu+=[boundary[i]]
+#     print(given_uu)
+#     print(given_rr)
+    for (rr,uu,tiless) in col_tile(ll,dd,given_rr,given_uu,widths): 
+        yield tiless
+
+def tiles_printer(tiless,style="PD"): 
+    res=""
+    information="cohomology type"
+    width = len(tiless[-1])
+    for tiles in tiless:
+        for tile in tiles: 
+            if tile[0] in [0,1]: label_print="--"; 
+            else: label_print=" "+str(tile[0]);
+            res+="+-"+label_print+"-"
+        res+="+\n"
+        for tile in tiles: 
+            (u,d,l,r)=tile
+            if u==d==l==r==0:
+                if style =="PD": tile_print=" 　 "
+                else: tile_print="-─-"
+            elif u==l>0 and r==d==0:
+                if style =="PD": tile_print="-╯ "
+                else: tile_print=" └-"
+            elif u==l==0 and r==d>0:
+                if style =="PD": tile_print=" ╭-"
+                else: tile_print="-┐ "
+            elif u==l>0 and r==d>0:
+                if style =="PD": tile_print="╯╭"
+                else: tile_print=" │ "
+            elif u==d>0 and r==l>0:
+                if style =="PD": tile_print="-┼-"
+                else: tile_print=" │ "
+                if r>d:
+                    information="motivic type"
+            elif u==d>0 and l==r==0:
+                if style =="PD": tile_print=" │ "
+                else: tile_print="╮╰" #"┐└"
+                information="motivic type"
+            elif l==r>0 and u==d==0:
+                if style =="PD": tile_print="-─-"
+                else: tile_print=" 　 "
+            else:
+                tile_print=" ？ "
+            if tile[2] in [0,1]: label_print="|"; 
+            else: label_print=str(tile[2]);
+            res+=label_print+tile_print
+        if tile[3] in [0,1]: label_print="|"; 
+        else: label_print=str(tile[3]);
+        res+=label_print
+        res+="\n"
+    res=res[:-1]
+    res+=" "+information+"\n"
+    for tile in tiles: 
+        if tile[1] in [0,1]: label_print="--"; 
+        else: label_print=" "+str(tile[1]);
+        res+="+-"+label_print+"-"
+    res+="+\n"
+#     res+=information
+    return res
+
+def inform(tiless):
+    shape = tuple([len(tiles) for tiles in tiless])
+    restype="0cohomology"
+    lboundary = tuple([tiles[0][2] for tiles in tiless])
+    dboundary = tuple([tile[1] for tile in tiless[-1]])
+    for tiles in tiless:
+        for tile in tiles: 
+            (u,d,l,r)=tile
+            if u==d>0 and l==r==0:
+                restype = "1motivic"
+    uboundary = []
+    rboundary = []
+    boundary = []
+    for tiles in tiless:
+        for tile in tiles[len(uboundary):]:
+#             print(tile)
+            (u,d,l,r)=tile
+            uboundary.append(u)
+            boundary.append(u)
+        rboundary.append(r)
+        boundary.append(r)
+    uboundary =tuple(uboundary)
+    rboundary =tuple(rboundary)
+    boundary =tuple(boundary)
+    return (shape,lboundary,boundary,dboundary,uboundary,rboundary,restype)
+
+def show_SSM_PD(ll,dd,boundary=None,style="PD",widths=None):
+    MY_list = sorted(SSM_PD(ll,dd,boundary,widths),key=inform)
+    boundary = []
+    for z in MY_list:
+        Inf = inform(z)
+        if Inf[2] != boundary: 
+            print("-"*5+str(Inf[2])+"-"*5)
+        boundary = Inf[2]
+        print(tiles_printer(z,style))
+    return 
+  </script>
+</div>
+
+
+<h3>Computation</h3>
+
+
+
+<div class="compute">
+  <script type="text/x-sage">
+show_SSM_PD([1,1,1],[0,0,0,0],[1,1,None,None,0,0,0],"PD",[2,3,4])
+  </script>
+ </div>
+
+<h3>Computation</h3>
+
+
+
+<div class="compute">
+  <script type="text/x-sage">
+show_SSM_PD([1,2,3],[0,0,0,0],[None,None,None,None,0,0,0],"PD")
+  </script>
+ </div>
+
+
+
+
+<hr>
+<a href="/">home</a>
