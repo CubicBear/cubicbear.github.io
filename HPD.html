@@ -7,11 +7,12 @@
     <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
     <script>
     sagecell.makeSagecell({inputLocation:  '#HPD',
-                           template:       sagecell.templates.minimal,
-                           linked: true,
-                           linkKey:"1",
-                           hide:["fullScreen"],
-                           evalButtonText: 'Activate'});
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
     sagecell.makeSagecell({inputLocation: 'div.choice',
                            linked: true,
                            linkKey:"1",
@@ -36,9 +37,7 @@
   <body>
   <h1>hybrid pipe dream</h1>
 
-  <h2>Activate</h2>
-  Click the “Activate” button below to calculate hybrid pipe dream.
-    <div id="HPD"><script type="text/x-sage">
+    <div id="HPD" visibility: hidden><script type="text/x-sage">
 def RC_piece(u,r): # return (d,l)
     yield (r,u)
     if (u == 0 and r!=0) or (u!=0 and r!=0 and u>r): 
@@ -210,7 +209,6 @@ print("done")
 </div>
 
 
-<h2>Computation</h2>
 Choose n, the permutation and "OB"-sequence
     <div class="compute"><script type="text/x-sage">
 n=6
