@@ -5,5 +5,5 @@
 
 @font-face {
     font-family: 'mononoki';
-    src: url('mononoki-Regular.ttf') format('ttf'),
-	url('mononoki-Regular.otf') format('otf');
+    src: url('mononoki-Regular.ttf') format('truetype'),
+	url('mononoki-Regular.otf') format('opentype');
