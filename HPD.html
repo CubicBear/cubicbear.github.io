@@ -23,6 +23,15 @@
                            hide:["fullScreen"],
                            evalButtonText: 'Evaluate'});
     </script>
+    <style>
+	@font-face {
+    font-family: 'mononoki';
+    src: url('mononoki-Regular.otf') format('opentype'),
+	    url('mononoki-Regular.ttf') format('truetype'); 
+      * {
+    font-family: 'mononoki', monospace !important;
+      }
+    </style>
   </head>
   <body>
   <h1>hybrid pipe dream</h1>
@@ -97,9 +106,9 @@ def hPD_boxdraw(xx):
         for j in range(m): 
             k = xx[1][i][j]
             if k ==0: 
-                this_line+="-"+"--"+"-+"
+                this_line+="-"+"-"+"-+"
             else:
-                this_line+="-"+["０","１","２","３","４","５","６","７","８","９","Ａ","Ｂ","Ｃ","Ｄ","Ｅ","Ｆ"][k]+"-+"
+                this_line+="-"+["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"][k]+"-+"
         res+=this_line+"\n" 
         if i<n:
             this_line=""
@@ -110,28 +119,28 @@ def hPD_boxdraw(xx):
                     u = xx[1][i][j]; d = xx[1][i+1][j]
                     l = xx[0][i][j]; r = xx[0][i][j+1]
                     if u==d==l==r==0: 
-                        if xx[0][i][-1] == "B": tile = " ■ "
-                        else: tile = "    "
+                        if xx[0][i][-1] == "B": tile = "[ ]"
+                        else: tile = "   "
                     if u==d==0 and l==r!=0: 
-                        if xx[0][i][-1] == "B": tile = "-─-"
-                        else: tile = "-━-"
+                        if xx[0][i][-1] == "B": tile = "───"
+                        else: tile = "━━━"
                     if u==d!=0 and l==r==0: 
                         tile = " │ "
                     if u==d!=0 and l==r!=0: 
-                        if xx[0][i][-1] == "B": tile = "-┼-"
-                        else: tile = "-╋-"
+                        if xx[0][i][-1] == "B": tile = "─┼─"
+                        else: tile = "━╋━"
                     if u==l!=0 and d==r==0: 
-                        tile = "-╯ "
+                        tile = "─╯ "
                     if u==l!=0 and d==r!=0: 
-                        tile = "╯╭"#╯̦
+                        tile = "╯ ╭"#╯̦
                     if u==l==0 and d==r!=0: 
-                        tile = " ╭-"
+                        tile = " ╭─"
                     if u==r!=0 and d==l==0: 
-                        tile = " └-"#" ╰ "
+                        tile = " └─"#" ╰ "
                     if u==r!=0 and d==l!=0: 
-                        tile = " ?? "
+                        tile = " ? "
                     if u==r==0 and d==l!=0: 
-                        tile = "-┐ " #" ╮ "
+                        tile = "─┐ " #" ╮ "
                 if k ==0: 
                     this_line+="|"+tile
                 else:
