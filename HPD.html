@@ -30,10 +30,11 @@
         src: url('mononoki-Regular.otf') format('opentype'),
             url('mononoki-Regular.ttf') format('truetype');
     }
-    
-    * {
-        font-family: 'mononoki', monospace !important;
-    }
+    * {font-family: 'mononoki', monospace !important;}
+    h1 {font-family: system-ui !important;}
+    h2 {font-family: system-ui !important;}
+    h3 {font-family: system-ui !important;}
+    a {font-family: system-ui !important;}
 </style>
 
   </head>
@@ -212,7 +213,7 @@ print("done")
 </div>
 
 
-Choose n, the permutation and "OB"-sequence
+<a>Choose \(n\), the permutation and "\(OB\)"-sequence</a>
     <div class="compute"><script type="text/x-sage">
 n=6
 uu = [2,6,4,3,1,5]
