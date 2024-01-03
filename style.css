@@ -2,3 +2,8 @@
     h1 {text-align:center;}
     h2 {color:#F6F6F6;background-color:DarkSlateGray;;padding:1%}
     a:link  {color:DarkBlue}
+
+@font-face {
+    font-family: 'mononoki';
+    src: url('mononoki-Regular.ttf') format('ttf'),
+	url('mononoki-Regular.otf') format('otf');
