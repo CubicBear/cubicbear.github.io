@@ -205,80 +205,6 @@ print(dict(f))
 </script>
 </div>
 
-<h3>Generating combinatorial objects
-</h3>
-One advantage of Python is the generator, which provides a powerful tool to generate objects. Here we give two examples in combinatorics. 
-
-<h4>Multi-sets</h4>
-<p>A multi-set with alphabet \(L\) of cardinality \(k\) is an \(S_k\)-orbit of \(L^k\).
-When \(L\) is ordered, we can uniquely write such multi-set by \(\{\!\{i_1\leq \cdots\leq i_k\}\!\}\) with all \(i_j\in L\).
-</p>
-<div class="compute">
-  <script type="text/x-sage">
-def Msets(L,k):
-    # boundary cases:
-    # when k == 0, only empty multi-set
-    # when L is empty and k!=0, no multi-set
-    if k == 0: 
-        yield []
-        return
-    if len(L) == 0:
-        return 
-    # if the multi-set contains L[0]
-    for A in Msets(L,k-1): 
-        yield [L[0]]+A
-    # if the multi-set does not contain L[0]
-    for A in Msets(L[1:],k):
-        yield A
-
-for A in Msets([1,2,3],4):
-    print(A)
-</script>
-</div>
-
-
-
-<h4>Standard Young Tableaux</h4>
-
-<p>Let \(\lambda\) be a partition. A standard Young tableau (SYT) of \(\lambda\) is a filling of its Young diagram with \(\{1,\cdots,n\}\) for \(n\) the number of boxes in  \(\lambda\) such that 
-(1) all numbers are used (exactly once),
-(2) each row is increasing, and
-(3) each column is increasing. We can similarly define (SYT) for skew shapes (difference of two partitions).
-</p>
-
-<div class="compute">
-  <script type="text/x-sage">
-def SYT(Tab,smallest_num = 1):
-    # we fill 1, and then 2, etc.
-    # find boxes can be filled by the smallest_num
-    corner_boxes = []
-    for i in range(len(Tab)): 
-        try:
-            ind = Tab[i].index(None) # find the first index of None in the i th row of Tab 
-            if i==0 or Tab[i-1][ind] != None: 
-                corner_boxes.append((i,ind))
-        except ValueError:
-            pass
-    if len(corner_boxes)==0: 
-        # last step = no box can be filled
-        yield Tab 
-        return 
-    for (i,j) in corner_boxes:
-        newTab = [row[:] for row in Tab] 
-        # row[:] means making a copy of the row
-        # entirely, we made a copy of Tab
-        newTab[i][j] = smallest_num
-        # Now the smallest_num is filled, we can fill the rest by induction
-        for T in SYT(newTab,smallest_num+1): 
-            yield T
-            
-for T in SYT([[0,0,None,None],[0,None,None]]):
-    for row in T:
-        print(row)
-    print("-" * 20)
-</script>
-</div>
-
 <h3>Operators</h3>
 
 There are many operators in combinatorics. Here are two examples. 
@@ -393,6 +319,82 @@ Mult(x[1]*x[2])()
 </script>
 </div>
 
+
+<h3>Generating combinatorial objects
+</h3>
+One advantage of Python is the generator, which provides a powerful tool to generate objects. Here we give two examples in combinatorics. 
+
+<h4>Multi-sets</h4>
+<p>A multi-set with alphabet \(L\) of cardinality \(k\) is an \(S_k\)-orbit of \(L^k\).
+When \(L\) is ordered, we can uniquely write such multi-set by \(\{\!\{i_1\leq \cdots\leq i_k\}\!\}\) with all \(i_j\in L\).
+</p>
+<div class="compute">
+  <script type="text/x-sage">
+def Msets(L,k):
+    # boundary cases:
+    # when k == 0, only empty multi-set
+    # when L is empty and k!=0, no multi-set
+    if k == 0: 
+        yield []
+        return
+    if len(L) == 0:
+        return 
+    # if the multi-set contains L[0]
+    for A in Msets(L,k-1): 
+        yield [L[0]]+A
+    # if the multi-set does not contain L[0]
+    for A in Msets(L[1:],k):
+        yield A
+
+for A in Msets([1,2,3],4):
+    print(A)
+</script>
+</div>
+
+
+
+<h4>Standard Young Tableaux</h4>
+
+<p>Let \(\lambda\) be a partition. A standard Young tableau (SYT) of \(\lambda\) is a filling of its Young diagram with \(\{1,\cdots,n\}\) for \(n\) the number of boxes in  \(\lambda\) such that 
+(1) all numbers are used (exactly once),
+(2) each row is increasing, and
+(3) each column is increasing. We can similarly define (SYT) for skew shapes (difference of two partitions).
+</p>
+
+<div class="compute">
+  <script type="text/x-sage">
+def SYT(Tab,smallest_num = 1):
+    # we fill 1, and then 2, etc.
+    # find boxes can be filled by the smallest_num
+    corner_boxes = []
+    for i in range(len(Tab)): 
+        try:
+            ind = Tab[i].index(None) # find the first index of None in the i th row of Tab 
+            if i==0 or Tab[i-1][ind] != None: 
+                corner_boxes.append((i,ind))
+        except ValueError:
+            pass
+    if len(corner_boxes)==0: 
+        # last step = no box can be filled
+        yield Tab 
+        return 
+    for (i,j) in corner_boxes:
+        newTab = [row[:] for row in Tab] 
+        # row[:] means making a copy of the row
+        # entirely, we made a copy of Tab
+        newTab[i][j] = smallest_num
+        # Now the smallest_num is filled, we can fill the rest by induction
+        for T in SYT(newTab,smallest_num+1): 
+            yield T
+            
+for T in SYT([[0,0,None,None],[0,None,None]]):
+    for row in T:
+        print(row)
+    print("-" * 20)
+</script>
+</div>
+
+	
 <hr>
 <a href="/">home</a>
 </body>
