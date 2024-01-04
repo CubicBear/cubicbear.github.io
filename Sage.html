@@ -22,19 +22,6 @@
           hide:["permalinkpermalink","done","sessionFiles"], 
           evalButtonText: 'Evaluate'});
 </script>
-<style>
-//    @font-face {
-//        font-family: 'mononoki';
-//        src: url('mononoki-Regular.otf') format('opentype'),
-//            url('mononoki-Regular.ttf') format('truetype');
-//    }
-//    * {font-family: 'mononoki', monospace !important;}
-//    h1 {font-family: system-ui !important;}
-//    h2 {font-family: system-ui !important;}
-//    h3 {font-family: system-ui !important;}
-//    a {font-family: system-ui !important;}
-//    div {font-family: system-ui !important;}
-</style>
 </head>
 <body>
 
@@ -299,7 +286,7 @@ There are many operators in combinatorics. Here are two examples.
 <h4>Schur operators</h4>
 <p>For a partition \(\lambda\), we define \(u_i\) the operator 
 \[u_i\lambda = \begin{cases}
-\lambda+\text{a box in the $i$-th row},& \text{if it is a partition},\\
+\lambda\cup\text{a box in the $i$-th row},& \text{if it is a partition},\\
 0, & \text{otherwise}. 
 \end{cases}\]
 This operator extends to the free vector space of partitions linearly. 
