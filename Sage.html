@@ -241,34 +241,41 @@ for A in Msets([1,2,3],4):
 
 <p><div class="compute">
   <script type="text/x-sage">
-def SYT(Tab,smallest_num=1):
-    # we fill 1, and then 2, etc.
-    # find boxes can be filled by the smallest_num
+def SYT(Tab: list[list[int | None]], smallest_num: int = 1):
+    """
+    we fill 1, and then 2, etc.
+    find boxes can be filled by the smallest_num
+    """
     corner_boxes = []
-    for i in range(len(Tab)): 
+    for i in range(len(Tab)):
         try:
-            ind = Tab[i].index(None) # find the first index of None 
-            if i==0 or Tab[i-1][ind]!=None: 
-                corner_boxes.append((i,ind))
+            ind = Tab[i].index(None)  # find the first index of None
+            if i == 0 or Tab[i - 1][ind] != None:
+                corner_boxes.append((i, ind))
         except ValueError:
             pass
-    if len(corner_boxes)==0: 
-        # last step = no box can be filled
-        yield Tab 
-        return 
-    for (i,j) in corner_boxes:
-        newTab = [row[:] for row in Tab] 
+
+    if len(corner_boxes) == 0:  # last step = no box can be filled
+        yield Tab
+        return
+
+    for i, j in corner_boxes:
+        newTab = [row[:] for row in Tab]
         # row[:] means making a copy of the row
         # entirely, we made a copy of Tab
+
         newTab[i][j] = smallest_num
         # Now the smallest_num is filled, we can fill the rest by induction
-        for T in SYT(newTab,smallest_num+1): 
+
+        for T in SYT(Tab=newTab, smallest_num=smallest_num + 1):
             yield T
-            
-for T in SYT([[0,0,None,None],[0,None,None]]):
+
+
+for T in SYT(Tab=[[0, 0, None, None], [0, None, None]]):
     for row in T:
         print(row)
-    print("-"*20)
+    print("-" * 20)
+
 </script>
 </div></p>
 
