@@ -260,8 +260,6 @@ Dunkl element is the operator formally defined as above.
 n=4
 G = Permutations(n)
 X = CombinatorialFreeModule(QQ,G,prefix="S")
-def B(*my_list):
-    return X.monomial(Permutation(list(my_list)))
 def tran(i,j): 
     t_ij = [i for i in [1..n]]
     (t_ij[i-1],t_ij[j-1]) = (j,i)
