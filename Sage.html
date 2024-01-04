@@ -162,7 +162,7 @@ print(list([x(y(i)) for i in [1..3]]))
 R = PolynomialRing(QQ,["x"+str(i) for i in [0..3]])
 x = list(R.gens())
 f = 2*x[0]^2*x[2] + R.monomial(*[4-i for i in [0..3]])
-print(f.dict())
+print(dict(f))
 # However, the keys of f.dict() is an ETtuple, and SageMath forgets to include a constructor and overload operators with the usual tuples. 
 My_dict = f.dict()
 My_dict = {tuple(x): My_dict[x] for x in My_dict}
@@ -201,7 +201,7 @@ G = Permutations()
 X = CombinatorialFreeModule(QQ,G,prefix="e")
 e = X.basis()
 f = e[G([1,3,2])]+2*e[Permutation([(1,2,5),(3,4)])]
-print(f.monomial_coefficients())
+print(dict(f))
 # You have to use hashable classes
 </script>
 </div></p>
@@ -241,14 +241,14 @@ for A in Msets([1,2,3],4):
 
 <p><div class="compute">
   <script type="text/x-sage">
-def SYT(Tab,smallest_num=1):
+def SYT(Tab,smallest_num = 1):
     # we fill 1, and then 2, etc.
     # find boxes can be filled by the smallest_num
     corner_boxes = []
     for i in range(len(Tab)): 
         try:
-            ind = Tab[i].index(None) # find the first index of None 
-            if i==0 or Tab[i-1][ind]!=None: 
+            ind = Tab[i].index(None) # find the first index of None in the i th row of Tab 
+            if i==0 or Tab[i-1][ind] != None: 
                 corner_boxes.append((i,ind))
         except ValueError:
             pass
@@ -268,12 +268,44 @@ def SYT(Tab,smallest_num=1):
 for T in SYT([[0,0,None,None],[0,None,None]]):
     for row in T:
         print(row)
-    print("-"*20)
+    print("-" * 20)
 </script>
 </div></p>
 
+<h3>Operators</h3>
 
+There are many operators in combinatorics. Here are two examples. 
 
+<h4>Schur operators</h4>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+X = CombinatorialFreeModule(QQ,Partitions(),prefix="")
+def B(*my_list): 
+    # with *, we use B(2,1), without *, we use B([2,1])
+    return X.monomial(Partition(my_list))
+def Schur_op(i): # adding a box in the i-th row (i = 0, 1, ...);
+    def my_fun(x):
+#        if type(x)==type(Partition([2,1])): x=X.monomial(x) 
+        res = X(0)
+        my_dict = x.monomial_coefficients()
+        for partition in my_dict: 
+            new_partition = list(partition)
+            if len(new_partition)>i and (i==0 or new_partition[i-1]!=new_partition[i]):
+                # if we can add a box in the i-th row
+                new_partition[i] +=1
+                res += my_dict[partition]*B(*new_partition)
+        return res
+    return my_fun
+print(Schur_op(1)(Schur_op(0)(B(2,2,1))))
+print(Schur_op(0)(Schur_op(1)(B(2,2,1))))
+</script>
+</div></p>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+</script>
+</div></p>
 
 <hr>
 <a href="/">home</a>
