@@ -23,15 +23,15 @@
           evalButtonText: 'Evaluate'});
 </script>
 <style>
-    @font-face {
-        font-family: 'mononoki';
-        src: url('mononoki-Regular.otf') format('opentype'),
-            url('mononoki-Regular.ttf') format('truetype');
-    }
-    * {font-family: 'mononoki', monospace !important;}
-    h1 {font-family: system-ui !important;}
-    h2 {font-family: system-ui !important;}
-    h3 {font-family: system-ui !important;}
+//    @font-face {
+//        font-family: 'mononoki';
+//        src: url('mononoki-Regular.otf') format('opentype'),
+//            url('mononoki-Regular.ttf') format('truetype');
+//    }
+//    * {font-family: 'mononoki', monospace !important;}
+//    h1 {font-family: system-ui !important;}
+//    h2 {font-family: system-ui !important;}
+//    h3 {font-family: system-ui !important;}
 //    a {font-family: system-ui !important;}
 //    div {font-family: system-ui !important;}
 </style>
@@ -41,16 +41,18 @@
 <h2>Tutorial on SageMath</h2>
   
 <h3>Introduction</h3>
+
 <p>
-I will give an introduction of <a href="https://www.sagemath.org/index.html">SageMath</a> here.
-The main features of SageMath: 
-<ol>
-<li>SageMath is a <a href="https://en.wikipedia.org/wiki/Computer_algebra_system">computer algebra system</a>;</li>
-<li>SageMath uses a syntax resembling <a href="https://www.python.org/">Python</a>'s;</li>
-<li>SageMath covers many aspects of discrete mathematics. </li>
-</ol>
-The main reference is its <a href="https://doc.sagemath.org/html/en/index.html"> official document</a>.
+  I will give an introduction of <a href="https://www.sagemath.org/index.html">SageMath</a> here.
+  The main features of SageMath:
+  <ol>
+    <li>SageMath is a <a href="https://en.wikipedia.org/wiki/Computer_algebra_system">computer algebra system</a>;</li>
+    <li>SageMath uses a syntax resembling <a href="https://www.python.org/">Python</a>'s;</li>
+    <li>SageMath covers many aspects of discrete mathematics.</li>
+  </ol>
+  The main reference is its <a href="https://doc.sagemath.org/html/en/index.html">official documentation</a>.
 </p>
+
 <p>
 After installing SageMath, you will have a shortcut to Jupyter (SageMath Notebook). We usually write SageMath code there. 
 You can also try SageMath <a href="https://sagecell.sagemath.org/">online</a>. 
@@ -81,7 +83,14 @@ This information is readily available in tutorials online.
 Here are two examples. 
 
 <h4>Collatz conjecture</h4>
-<p><div class="compute">
+<p>Consider the following operation on an arbitrary positive integer:
+<a>\[n\longmapsto \begin{cases}
+	n/2, & \text{if $n$ is even}, \\
+	n+3, & \text{if $n$ is odd}. 
+	\end{cases}\]</a>
+The Collatz conjecture is: This process will eventually reach the cycle $1\mapsto 4\mapsto 2 \mapsto \cdots$, regardless of which positive integer is chosen initially.
+	</p>
+<div class="compute">
   <script type="text/x-sage">
 num = 100
 num_step = 0 # to record the number of steps
@@ -94,13 +103,16 @@ while num not in [1,2,4]:
 	print("the num is "+str(num))
 print("It takes "+str(num_step)+" steps")
 </script>
-</div></p>
+</div>
 
 <h4>Fibonacci sequence</h4>
+<p>Fibonacci sequence is the sequence defined by 
+\[F_0=0,F_1=1, \text{ and } F_n=F_{n-1}+F_{n-2} \text{ when $n\geq 2$}\]
+We can compute it using the following code. </p>
 
-<p><div class="compute">
+<div class="compute">
   <script type="text/x-sage">
-record={0:1,1:1} # F_0=1, and F_1=1
+record={0:0,1:1} # F_0=1, and F_1=1
 def Feb(n): # define a function
 	if n not in record.keys():
 		record[n] = record[n-1] + record[n-2]
@@ -109,7 +121,7 @@ for n in range(10):
 	print("F_"+str(n)+" is "+str(Feb(n)))
 print(record)
 </script>
-</div></p>
+</div>
 
 <!--Note that the difference of list and tuple (a feature of Python). 
 <p><div class="compute">
@@ -131,7 +143,7 @@ Here I give some typical examples of mathematical structures. We refer to the <a
   
 <h4>Matrices</h4>
 
-<p><div class="compute">
+<div class="compute">
   <script type="text/x-sage">
 M = Matrix([[binomial(i,j) for j in [0..4]] for i in [0..4]])
 N = Matrix([[(-1)^(i+j)*binomial(i,j) for j in [0..4]] for i in [0..4]])
@@ -139,11 +151,11 @@ N = Matrix([[(-1)^(i+j)*binomial(i,j) for j in [0..4]] for i in [0..4]])
 print(det(M*N))
 print(M[2][1],N[4,2])
 </script>
-</div></p>
+</div>
 
 <h4>Permutations</h4>
 
-<p><div class="compute">
+<div class="compute">
   <script type="text/x-sage">
 G=Permutations(3) 
 x = G([1,3,2]); y = G([2,1,3])
@@ -151,13 +163,13 @@ print(x*y,(x*y).length())
 print(list([x(y(i)) for i in [1..3]]))
 # In SageMath, permutations are reversed. 
 </script>
-</div></p>
+</div>
 
 
 
 <h4>Polynomials</h4>
 
-<p><div class="compute">
+<div class="compute">
   <script type="text/x-sage">
 R = PolynomialRing(QQ,["x"+str(i) for i in [0..3]])
 x = list(R.gens())
@@ -169,11 +181,11 @@ My_dict = {tuple(x): My_dict[x] for x in My_dict}
 print((2,0,1,0) in f.dict().keys())
 print((2,0,1,0) in My_dict.keys())
 </script>
-</div></p>
+</div>
 
+	<br>
 
-
-<p><div class="compute">
+<div class="compute">
   <script type="text/x-sage">
 R = PolynomialRing(QQ,["x"+str(i) for i in [0..3]])
 x = list(R.gens())
@@ -191,11 +203,11 @@ print(divided_difference(1)(x[1]^3))
 print(divided_difference(1,3)(x[1]^3))
 print(divided_difference(0,3)(1))
 </script>
-</div></p>
+</div>
 
 <h4>Free modules</h4>
 
-<p><div class="compute">
+<div class="compute">
   <script type="text/x-sage">
 G = Permutations()
 X = CombinatorialFreeModule(QQ,G,prefix="e")
@@ -204,15 +216,17 @@ f = e[G([1,3,2])]+2*e[Permutation([(1,2,5),(3,4)])]
 print(dict(f))
 # You have to use hashable classes
 </script>
-</div></p>
+</div>
 
 <h3>Generating combinatorial objects
 </h3>
 One advantage of Python is the generator, which provides a powerful tool to generate objects. Here we give two examples in combinatorics. 
 
 <h4>Multi-sets</h4>
-
-<p><div class="compute">
+<p>A multi-set with alphabet \(L\) of cardinality \(k\) is an \(S_k\)-orbit of \(L^k\).
+When \(L\) is ordered, we can uniquely write such multi-set by \(\{\!\{i_1\leq \cdots\leq i_k\}\!\}\) with all \(i_j\in L\).
+</p>
+<div class="compute">
   <script type="text/x-sage">
 def Msets(L,k):
     # boundary cases:
@@ -233,13 +247,19 @@ def Msets(L,k):
 for A in Msets([1,2,3],4):
     print(A)
 </script>
-</div></p>
+</div>
 
 
 
 <h4>Standard Young Tableaux</h4>
 
-<p><div class="compute">
+<p>Let \(\lambda\) be a partition. A standard Young tableau (SYT) of \(\lambda\) is a filling of its Young diagram with \(\{1,\cdots,n\}\) for \(n\) the number of boxes in  \(\lambda\) such that 
+(1) all numbers are used (exactly once),
+(2) each row is increasing, and
+(3) each column is increasing. We can similarly define (SYT) for skew shapes (difference of two partitions).
+</p>
+
+<div class="compute">
   <script type="text/x-sage">
 def SYT(Tab,smallest_num = 1):
     # we fill 1, and then 2, etc.
@@ -270,25 +290,33 @@ for T in SYT([[0,0,None,None],[0,None,None]]):
         print(row)
     print("-" * 20)
 </script>
-</div></p>
+</div>
 
 <h3>Operators</h3>
 
 There are many operators in combinatorics. Here are two examples. 
 
 <h4>Schur operators</h4>
+<p>For a partition \(\lambda\), we define \(u_i\) the operator 
+\[u_i\lambda = \begin{cases}
+\lambda+\text{a box in the $i$-th row},& \text{if it is a partition},\\
+0, & \text{otherwise}. 
+\end{cases}\]
+This operator extends to the free vector space of partitions linearly. 
+The Schur operators satisfy the relation of <a href="https://en.wikipedia.org/wiki/Plactic_monoid">Plactic monoid</a>.
+	</p>
 
-<p><div class="compute">
+<div class="compute">
   <script type="text/x-sage">
 X = CombinatorialFreeModule(QQ,Partitions(),prefix="")
 def B(*my_list): 
     # with *, we use B(2,1), without *, we use B([2,1])
-    return X.monomial(Partition(my_list))
-def Schur_op(i): # adding a box in the i-th row (i = 0, 1, ...);
+    return X.monomial(Partition(my_list)) 
+	# Note that Partition != Partitions.  
+def single_Schur_op(i): # adding a box in the i-th row (i = 0, 1, ...);
     def my_fun(x):
-#        if type(x)==type(Partition([2,1])): x=X.monomial(x) 
         res = X(0)
-        my_dict = x.monomial_coefficients()
+        my_dict = dict(x)
         for partition in my_dict: 
             new_partition = list(partition)
             if len(new_partition)>i and (i==0 or new_partition[i-1]!=new_partition[i]):
@@ -297,18 +325,87 @@ def Schur_op(i): # adding a box in the i-th row (i = 0, 1, ...);
                 res += my_dict[partition]*B(*new_partition)
         return res
     return my_fun
-print(Schur_op(1)(Schur_op(0)(B(2,2,1))))
-print(Schur_op(0)(Schur_op(1)(B(2,2,1))))
+def Schur_op(*i_list): 
+    if len(i_list)==0: 
+        return lambda x:x # lambda x:x is the function sending x to x, i.e. identity function
+    return lambda x: single_Schur_op(i_list[0])(Schur_op(*i_list[1:])(x))
+print(Schur_op(1,2,1,0)(B(2,2,1)+B(4,3,3)))
 </script>
-</div></p>
+</div>
 
-<p><div class="compute">
+<h4>Dunkl elements</h4>
+<p>For fixed \(n\), the Chevalley formula gives 
+\[x_k\mathfrak{S}_w = 
+	-\sum_{\begin{subarray}{c}i&lt;k\\\ell(wt_{ik})=\ell(w)+1\end{subarray}}\mathfrak{S}_{wt_{ik}}
+	+\sum_{\begin{subarray}{c}i&gt;k\\\ell(wt_{ik})=\ell(w)+1\end{subarray}}\mathfrak{S}_{wt_{ik}}.									 \]
+where \(\mathfrak{S}_w\) is the Schubert polynomial, and \(t_{ab}\) is the transposition of $a,b$.
+Dunkl element is the operator formally defined as above. 
+</p>
+	
+<div class="compute">
   <script type="text/x-sage">
+n=4
+G = Permutations(n)
+X = CombinatorialFreeModule(QQ,G,prefix="S")
+def B(*my_list):
+    return X.monomial(Permutation(list(my_list)))
+def tran(i,j): 
+    t_ij = [i for i in [1..n]]
+    (t_ij[i-1],t_ij[j-1]) = (j,i)
+    t_ij = Permutation(t_ij)
+    return t_ij
+def Dunkl(k): 
+    def my_func(x=X.monomial(G.one())): 
+        res = X(0)
+        my_dict = dict(x)
+        for w in my_dict: 
+            for i in [1..k-1]:
+                new_w = tran(i,k)*w # compute wt_ik (SageMath use reversed order)
+                if new_w.length() == w.length() + 1:
+                        res -= my_dict[w] * X.monomial(new_w)
+            for i in [k+1..n]:
+                new_w = tran(i,k)*w # compute wt_ik (SageMath use reversed order)
+                if new_w.length() == w.length() + 1:
+                        res += my_dict[w] * X.monomial(new_w)
+        return res
+    return my_func    
+print(Dunkl(1)(Dunkl(3)()))
+print(Dunkl(3)(Dunkl(1)()))
 </script>
-</div></p>
+</div>
+
+	<br>
+	
+<div class="compute">
+  <script type="text/x-sage">
+# Please run the previous cell
+R = PolynomialRing(QQ,["x"+str(i) for i in [1..n]])
+x = list(R.gens()) # note that x[i-1] = xi
+def Horner(f): # return (i,f1,f2) such that f(x[0],...)=x[i]*f1(x[i],...)+f2(x[i+1],...)
+    x = list(f.parent().gens())
+    i = 0; f1 = 0; f2 = f
+    while f==f2 and i<=len(x): 
+        i += 1
+        sub = [x[j] if j>i else 0 for j in range(len(x))]
+        f2 = f(sub)
+    if i > n: # f(x_1,...,x_n)=f(0), so f is a contant
+        return (None,0,f.parent().base_ring()(f2))
+    else: # otherwise, return (i,f1,f2)
+        return (i,R((f-f2)/x[i]),f2)
+# f = x[1]*x[2]
+# (i,f1,f2)=Horner(f)
+# f == x[i]*f1+f2
+def Mult(f): 
+    (i,f1,f2) = Horner(f)
+    if i==None: 
+        return lambda x=X.monomial(G.one()):f2*x
+    else:
+        return lambda x=X.monomial(G.one()):Mult(f1)(Dunkl(i)(x))+Mult(f2)(x)
+Mult(x[1]*x[2])()
+</script>
+</div>
 
 <hr>
 <a href="/">home</a>
 </body>
-</html>
 </html>
