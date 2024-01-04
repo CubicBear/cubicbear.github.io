@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="style.css">
 	
 <title>Tutorial on SageMath</title>
-	
+
 <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
 <script>
     sagecell.makeSagecell({inputLocation:  '#Activate',
@@ -39,7 +39,7 @@
 <body>
 
 <h2>Tutorial on SageMath</h2>
-  
+	
 <h3>Introduction</h3>
 
 <p>
@@ -384,11 +384,11 @@ x = list(R.gens()) # note that x[i-1] = xi
 def Horner(f): # return (i,f1,f2) such that f(x[0],...)=x[i]*f1(x[i],...)+f2(x[i+1],...)
     x = list(f.parent().gens())
     i = 0; f1 = 0; f2 = f
-    while f==f2 and i<=len(x): 
+    while f == f2 and i <= len(x): 
         i += 1
         sub = [x[j] if j>i else 0 for j in range(len(x))]
         f2 = f(sub)
-    if i > n: # f(x_1,...,x_n)=f(0), so f is a contant
+    if i >= len(x): # f(x[0],...) == f(0), so f is a contant
         return (None,0,f.parent().base_ring()(f2))
     else: # otherwise, return (i,f1,f2)
         return (i,R((f-f2)/x[i]),f2)
@@ -396,11 +396,12 @@ def Horner(f): # return (i,f1,f2) such that f(x[0],...)=x[i]*f1(x[i],...)+f2(x[i
 # (i,f1,f2)=Horner(f)
 # f == x[i]*f1+f2
 def Mult(f): 
+    f=R(f)
     (i,f1,f2) = Horner(f)
     if i==None: 
-        return lambda x=X.monomial(G.one()):f2*x
+        return lambda x = X.monomial(G.one()) : f2*x
     else:
-        return lambda x=X.monomial(G.one()):Mult(f1)(Dunkl(i)(x))+Mult(f2)(x)
+        return lambda x = X.monomial(G.one()): Mult(f1)(Dunkl(i)(x))+Mult(f2)(x)
 Mult(x[1]*x[2])()
 </script>
 </div>
