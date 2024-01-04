@@ -42,13 +42,24 @@
   
 <h3>Introduction</h3>
   
-In this page, I will introduce the basic usage of <a href="https://www.sagemath.org/index.html">SageMath</a>, see its <a href="https://doc.sagemath.org/html/en/index.html"> official document</a>.
+I will give an introduction of <a href="https://www.sagemath.org/index.html">SageMath</a> here.
 The main features of SageMath: 
 <ol>
 <li>SageMath is a <a href="https://en.wikipedia.org/wiki/Computer_algebra_system">computer algebra system</a>;</li>
 <li>SageMath uses a syntax resembling <a href="https://www.python.org/">Python</a>'s;</li>
 <li>SageMath covers many aspects of discrete mathematics. </li>
 </ol>
+The main reference is its <a href="https://doc.sagemath.org/html/en/index.html"> official document</a>.
+<br>
+After installing SageMath, you will have a shortcut to Jupyter (SageMath Notebook). We usually write SageMath code there. 
+You can also try SageMath <a href="https://sagecell.sagemath.org/">online</a>. 
+<br>
+In general, most of the commands/methods you need can be found by searching on the internet (very similar to the situation of LaTeX). 
+Well, sometimes you can understand the full story only after hundreds of guessing, testing, and comparing so many documents, which is very similar to math research,
+	see this <a href="https://www.reddit.com/r/ProgrammerHumor/comments/7r3hvl/if_the_authors_of_programming_textbooks_wrote/" title = "If the authors of computer programming books wrote arithmetic text books">meme</a>. 
+I think most of readers already get used to this feeling for many years, so let me share with you something different. 
+I will focus more on "programming", say how to design your algorithm. 
+
 
 <!--<div id="Activate" visibility: hidden>
   <script type="text/x-sage">
@@ -68,7 +79,7 @@ Here are two examples.
 <p><div class="compute">
   <script type="text/x-sage">
 num = 100
-num_step = 0 # record the number of steps
+num_step = 0 # to record the number of steps
 while num not in [1,2,4]: 
 	num_step += 1 # equivalently, num_step = num_step + 1
 	if num/2 in ZZ: # in Sage, ZZ = the ring of integer numbers
