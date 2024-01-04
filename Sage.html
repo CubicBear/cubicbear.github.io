@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Tutorial of SageMath</title>
+	
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles"], 
+          evalButtonText: 'Evaluate'});
+</script>
+<style>
+    @font-face {
+        font-family: 'mononoki';
+        src: url('mononoki-Regular.otf') format('opentype'),
+            url('mononoki-Regular.ttf') format('truetype');
+    }
+    * {font-family: 'mononoki', monospace !important;}
+    h1 {font-family: system-ui !important;}
+    h2 {font-family: system-ui !important;}
+    h3 {font-family: system-ui !important;}
+//    a {font-family: system-ui !important;}
+//    div {font-family: system-ui !important;}
+</style>
+</head>
+<body>
+
+<h2>Tutorial of SageMath</h2>
+  
+<h3>Introduction</h3>
+  
+In this page, I will introduce the basic usage of <a href="https://www.sagemath.org/index.html">SageMath</a>, see its <a href="https://doc.sagemath.org/html/en/index.html"> official document</a>.
+The main features of SageMath: 
+<ol>
+<li>SageMath is a <a href="https://en.wikipedia.org/wiki/Computer_algebra_system">computer algebra system</a>;</li>
+<li>SageMath uses a syntax resembling <a href="https://www.python.org/">Python</a>'s;</li>
+<li>SageMath covers many aspects of discrete mathematics. </li>
+</ol>
+
+<!--<div id="Activate" visibility: hidden>
+  <script type="text/x-sage">
+def my_fun(x): 
+	print(x)
+print("done")
+# put your code
+  </script>
+</div>-->
+
+<h3>Python syntax</h3>
+
+You can easily find the basic usage of Python on the Internet. 
+Here are two examples. 
+
+<h4>Collatz conjecture</h4>
+<p><div class="compute">
+  <script type="text/x-sage">
+num = 100
+num_step = 0 # record the number of steps
+while num not in [1,2,4]: 
+	num_step += 1 # equivalently, num_step = num_step + 1
+	if num/2 in ZZ: # in Sage, ZZ = the ring of integer numbers
+		num = num/2
+	else:
+		num = num + 3
+	print("the num is "+str(num))
+print("It takes "+str(num_step)+" steps")
+</script>
+</div></p>
+
+<h4>Fibonacci sequence</h4>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+record={0:1,1:1} # F_0=1, and F_1=1
+def Feb(n): # define a function
+	if n not in record.keys():
+		record[n] = record[n-1] + record[n-2]
+	return record[n] 
+for n in range(10): 
+	print("F_"+str(n)+" is "+str(Feb(n)))
+print(record)
+</script>
+</div></p>
+
+<!--Note that the difference of list and tuple (a feature of Python). 
+<p><div class="compute">
+<script type="text/x-sage">
+x = [0,1]; y = x; y[0] = 2; 
+# Say, what is recorded in a list, is not a value, it is the an address of the value
+print(x,y) 
+x = (0,1); y = x; y[0] = 2 
+# one cannot change a value in a tuple directly.
+print(x,y) 
+</script>
+</div>
+</p>-->
+
+<h3>Selected stuctures in Mathematics
+</h3>
+Here I give some typical example of mathematical structure. We refer to the <a href="https://doc.sagemath.org/html/en/index.html">documents</a>, 
+  especially <a href="https://doc.sagemath.org/html/en/constructions/index.html">construction</a> for more structures. 
+  
+<h4>Matrices</h4>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+M = Matrix([[binomial(i,j) for j in [0..4]] for i in [0..4]])
+N = Matrix([[(-1)^(i+j)*binomial(i,j) for j in [0..4]] for i in [0..4]])
+# Note that in Python, everything start from 0, including matrices
+print(det(M*N))
+print(M[2][1],N[4,2])
+</script>
+</div></p>
+
+<h4>Permutations</h4>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+G=Permutations(3) 
+x = G([1,3,2]); y = G([2,1,3])
+print(x*y,(x*y).length()) 
+print(list([x(y(i)) for i in [1..3]]))
+# In SageMath, permutations are reversed. 
+</script>
+</div></p>
+
+
+
+<h4>Polynomials</h4>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+R = PolynomialRing(QQ,["x"+str(i) for i in [0..3]])
+x = list(R.gens())
+f = 2*x[0]^2*x[2] + R.monomial(*[4-i for i in [0..3]])
+print(f.dict())
+# however, the keys of f.dict() is an ETtuple, and SageMath forget to include contructor and overload operators with usual tuple. 
+My_dict = f.dict()
+My_dict = {tuple(x): My_dict[x] for x in My_dict}
+print((2,0,1,0) in f.dict().keys())
+print((2,0,1,0) in My_dict.keys())
+</script>
+</div></p>
+
+
+
+<p><div class="compute">
+  <script type="text/x-sage">
+R = PolynomialRing(QQ,["x"+str(i) for i in [0..3]])
+x = list(R.gens())
+def divided_difference(a,b=None):
+	if b==None: b=a+1
+	def my_fun(f):
+		f=R(f) # make it work even when f is a constant...
+		newx = x+[] # this makes a copy of x, this is necessary! 
+		(newx[a],newx[b])=(x[b],x[a])
+		res = (f - f(newx))/(x[a]-x[b])
+		return R(res) 
+		# still, this makes Sage believe res is in R, instead of Frac(R)...
+	return my_fun 
+print(divided_difference(1)(x[1]^3))
+print(divided_difference(1,3)(x[1]^3))
+print(divided_difference(0,3)(1))
+</script>
+</div></p>
+
+<h4>Free modules</h4>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+G = Permutations()
+X = CombinatorialFreeModule(QQ,G,prefix="e")
+e = X.basis()
+f = e[G([1,3,2])]+2*e[Permutation([(1,2,5),(3,4)])]
+print(f.monomial_coefficients())
+# You have to use hashable classes
+</script>
+</div></p>
+
+<h3>Generating combinatorial object
+</h3>
+
+<h4>Multi-sets</h4>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+def Msets(L,k):
+    # boundary cases:
+    # when k == 0, only empty multi-set
+    # when L is empty and k!=0, no multi-set
+    if k == 0: 
+        yield []
+        return
+    if len(L) == 0:
+        return 
+    # if the multi-set contains L[0]
+    for A in Msets(L,k-1): 
+        yield [L[0]]+A
+    # if the multi-set does not contain L[0]
+    for A in Msets(L[1:],k):
+        yield A
+
+for A in Msets([1,2,3],4):
+    print(A)
+</script>
+</div></p>
+
+
+
+<h4>Standard Young Tableaux</h4>
+
+<p><div class="compute">
+  <script type="text/x-sage">
+def SYT(Tab,smallest_num=1):
+    # we fill 1, and then 2, etc.
+    # find boxes can be filled by the smallest_num
+    corner_boxes = []
+    for i in range(len(Tab)): 
+        try:
+            ind = Tab[i].index(None) # find the first index of None 
+            if i==0 or Tab[i-1][ind]!=None: 
+                corner_boxes.append((i,ind))
+        except ValueError:
+            pass
+    if len(corner_boxes)==0: 
+        # last step = no box can be filled
+        yield Tab 
+        return 
+    for (i,j) in corner_boxes:
+        newTab = [row[:] for row in Tab] 
+        # row[:] menas making a copy of row
+        # entirely, we made a copy of Tab
+        newTab[i][j] = smallest_num
+        # now, the smallest_num is filled, we can fill the rest by indution
+        for T in SYT(newTab,smallest_num+1): 
+            yield T
+            
+for T in SYT([[0,0,None,None],[0,None,None]]):
+    for row in T:
+        print(row)
+    print("-"*20)
+</script>
+</div></p>
+
+
+
+
+<hr>
+<a href="/">home</a>
+</body>
+</html>
+</html>
