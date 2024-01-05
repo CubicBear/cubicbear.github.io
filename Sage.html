@@ -162,7 +162,7 @@ R = PolynomialRing(QQ,["x"+str(i) for i in [0..3]])
 x = list(R.gens())
 f = 2*x[0]^2*x[2] + R.monomial(*[4-i for i in [0..3]])
 print(dict(f))
-# However, the keys of f.dict() is an ETtuple, and SageMath forgets to include a constructor and overload operators with the usual tuples. 
+# However, the keys of f.dict() are ETtuple's, and SageMath forgets to include a constructor and overload operators with the usual tuples. 
 My_dict = f.dict()
 My_dict = {tuple(x): My_dict[x] for x in My_dict}
 print((2,0,1,0) in f.dict().keys())
