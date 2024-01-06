@@ -73,7 +73,7 @@ Here are two examples.
 <p>Consider the following operation on an arbitrary positive integer:
 <a>\[n\longmapsto \begin{cases}
 	n/2, & \text{if $n$ is even}, \\
-	n+3, & \text{if $n$ is odd}. 
+	3n+1, & \text{if $n$ is odd}. 
 	\end{cases}\]</a>
 The Collatz conjecture is: This process will eventually reach the cycle $1\mapsto 4\mapsto 2 \mapsto \cdots$, regardless of which positive integer is chosen initially.
 	</p>
@@ -86,7 +86,7 @@ while num not in [1,2,4]:
 	if num/2 in ZZ: # in Sage, ZZ = the ring of integer numbers
 		num = num/2
 	else:
-		num = num + 3
+		num = 3*num + 1
 	print("the num is "+str(num))
 print("It takes "+str(num_step)+" steps")
 </script>
