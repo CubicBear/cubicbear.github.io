@@ -61,7 +61,7 @@ Generator of Hybrid pipe dreams for key polynomials.
   
 <div class="compute">
   <script type="text/x-sage">
-comp, OB = random_comp_OB(4,4)
+comp, OB = random_comp_OB(4,10)
 print(comp)
 for xxx in HPD(comp,OB):
     print(xxx[-1])
@@ -74,10 +74,27 @@ Generator of two consecutive rows of Hybrid pipe dreams.
 
 <div class="compute">
   <script type="text/x-sage">
-comp, OB = random_comp_OB(4,10)
-X = compare(comp,4)
+comp, OB = random_comp_OB(8,5)
+X = compare(comp,8)
 for ind in X:
-    print("-"*20)
+    print()
+    for xxx in X[ind]:
+        print(xxx)
+  </script>
+</div>
+
+
+<h3>Generator 3</h3>
+  
+Generator of two consecutive rows of Hybrid pipe dreams with distribution of weight. 
+
+<div class="compute">
+  <script type="text/x-sage">
+comp, OB = random_comp_OB(8,5)
+X, wt = two_row(comp,8,"OB")
+for ind in X:
+    print()
+    print("Weight distribution",wt[ind])
     for xxx in X[ind]:
         print(xxx)
   </script>
@@ -205,23 +222,23 @@ def PB_print(xxx,n=None):
                     res+=("╬" if i in tile[2] else "═")
             if tile[-1]=="O": 
 #                 res += ("\033[31m"+Alph(tile[1])+"\033[0m" if tile[1] != 0 else "|")
-                res += ("%" if tile[1] != 0 else "|")
+                res += ("■" if tile[1] != 0 else "|")
             else:
 #                 res += (Alph(tile[1]) if tile[1] != 0 else "\033[34m|\033[0m")
-                res += (Alph(tile[1]) if tile[1] != 0 else "%")
+                res += (Alph(tile[1]) if tile[1] != 0 else "■")
 #                 res += ("═" if tile[1] != 0 else "x")
 
         #compute the type of this row
         res += "  "+tile[-1]
     
-        #compute the weight in this row
-        weight_this_row=0
-        for tile in row:
-            if tile[4] == "O" and tile[1] !=0: 
-                weight_this_row += 1
-            elif tile[4] == "B" and tile[1] ==0: 
-                weight_this_row += 1 
-        res += "  "+str(weight_this_row)
+#         #compute the weight in this row
+#         weight_this_row=0
+#         for tile in row:
+#             if tile[4] == "O" and tile[1] !=0: 
+#                 weight_this_row += 1
+#             elif tile[4] == "B" and tile[1] ==0: 
+#                 weight_this_row += 1 
+#         res += "  "+str(weight_this_row)
         
         res += "\n"
         
@@ -277,7 +294,7 @@ def HPD(comp,OB_seq,width=None,ll=None, rr=None):
         yield (dd,keyPD(PDx))
 #     return PB_block(uu,ll,rr)
 
-def HPD_rec(comp,OB_seq,width=None,ll=None, rr=None): 
+def HPD_rec(comp,OB_seq,width=None,ll=None, rr=None): # index by lower boundary and weight
     res = {}
     for PDx in HPD(comp,OB_seq,width,ll,rr): 
         ind = (tuple(PDx[0]),weight(PDx[-1]))
@@ -299,6 +316,31 @@ def compare(comp,n,width=None):
         res[ind]+=res_BO[ind]
     return res
 
+def HPD_rec2(comp,OB_seq,width=None,ll=None, rr=None): # index by lower boundary
+    res = {}
+    for PDx in HPD(comp,OB_seq,width,ll,rr): 
+        ind = tuple(PDx[0])
+        if ind not in res.keys(): res[ind] = []
+        res[ind].append(PDx[-1])
+#     for uu in res: 
+#         res[uu].sort(key=weight)
+    return res
+
+def two_row(comp,n,OB="OB",width=None): 
+    res = HPD_rec2(comp,OB,width,[1,0],[0,n])
+    res2 = {ind:0 for ind in res}
+    for ind in res:
+        res[ind].sort(key=weight)
+        wt = weight(res[ind][0])
+        wt = wt[0] + wt[-1]
+#         print(wt)
+        res2[ind] = [0 for _ in [0..wt]]
+        for PD in res[ind]: 
+            res2[ind][weight(PD)[0]]+=1
+#         print(res2)
+    return (res,res2)
+
+
 import random
 def random_comp_OB(n=4,width=4):
     res = []; OB=""
@@ -310,5 +352,3 @@ def random_comp_OB(n=4,width=4):
 </div>  
 </body>
 </html>
-
-
