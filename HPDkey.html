@@ -75,7 +75,7 @@ Generator of two consecutive rows of Hybrid pipe dreams.
 <div class="compute">
   <script type="text/x-sage">
 comp, OB = random_comp_OB(8,5)
-X = compare(comp,8)
+X = compare(comp)
 for ind in X:
     print()
     for xxx in X[ind]:
@@ -91,7 +91,7 @@ Generator of two consecutive rows of Hybrid pipe dreams with distribution of wei
 <div class="compute">
   <script type="text/x-sage">
 comp, OB = random_comp_OB(8,5)
-X, wt = two_row(comp,8,"OB")
+X, wt = two_row(comp,"OB")
 for ind in X:
     print()
     print("Weight distribution",wt[ind])
@@ -304,7 +304,8 @@ def HPD_rec(comp,OB_seq,width=None,ll=None, rr=None): # index by lower boundary 
 #         res[uu].sort(key=weight)
     return res
 
-def compare(comp,n,width=None): 
+def compare(comp,width=None): 
+    n = len(comp)
     res_OB = HPD_rec(comp,"OB",width,[1,0],[0,n])
     res_BO = HPD_rec(comp,"BO",width,[0,1],[n,0])
     res = {}
@@ -326,7 +327,8 @@ def HPD_rec2(comp,OB_seq,width=None,ll=None, rr=None): # index by lower boundary
 #         res[uu].sort(key=weight)
     return res
 
-def two_row(comp,n,OB="OB",width=None): 
+def two_row(comp,OB="OB",width=None): 
+    n = len(comp)
     res = HPD_rec2(comp,OB,width,[1,0],[0,n])
     res2 = {ind:0 for ind in res}
     for ind in res:
