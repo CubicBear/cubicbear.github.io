@@ -329,7 +329,10 @@ def HPD_rec2(comp,OB_seq,width=None,ll=None, rr=None): # index by lower boundary
 
 def two_row(comp,OB="OB",width=None): 
     n = len(comp)
-    res = HPD_rec2(comp,OB,width,[1,0],[0,n])
+    if OB=="OB":
+        res = HPD_rec2(comp,OB,width,[1,0],[0,n])
+    elif OB =="BO":
+        res = HPD_rec2(comp,OB,width,[0,1],[n,0])
     res2 = {ind:0 for ind in res}
     for ind in res:
         res[ind].sort(key=weight)
