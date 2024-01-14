@@ -12,6 +12,9 @@
         .step.active {
           display: block;
         }
+      .explain {
+        min-width: 300px
+      }
         
     @font-face {
         font-family: 'mononoki';
@@ -67,7 +70,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 17
-</pre><div>
+</pre><div class="explain">
 <h3>1. Obvious mine</h3>
 <p> Since Gc=1, it is clear that Fd is a mine.</p>
 <p> Since Fd is a mine, Fe must be safe. </p>
@@ -98,7 +101,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 16
-</pre><div>
+</pre><div class="explain">
 <h3>2. Exclusion</h3>
 <p>Note that <br>&nbsp;&nbsp;&nbsp;&nbsp;
 Ea + Eb = 1 since Fa=1; <br>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -137,7 +140,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 16
-</pre><div>
+</pre><div class="explain">
 <h3>3. Exercises</h3>
 <p>Exercise: now, prove Db, Dc, Dd are all safe. 
   (Hint: consider Fc and Ec)
@@ -178,7 +181,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 16
-</pre><div>
+</pre><div class="explain">
 <h3>4. Inequality</h3>
 <p>
 Note that <br>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -223,7 +226,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │   │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 14
-</pre><div>
+</pre><div class="explain">
 <h3>5. Exercise</h3>
 <p>
 Prove that Ba is safe. (Hint: <br>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -258,7 +261,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │   │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 14
-</pre><div>
+</pre><div class="explain">
 <h3>6. Intersection</h3>
 Consider Ac + Ad<br>&nbsp;&nbsp;&nbsp;&nbsp;
   Ac + Ad != 2 since Bc=2<br>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -293,7 +296,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │   │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 12
-</pre><div>
+</pre><div class="explain">
 <h3>7. Do trivial things</h3>
 <p>Now, <br>
   Aa and Ac are mines;<br>
@@ -328,7 +331,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │   │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 9
-</pre><div>
+</pre><div class="explain">
 <h3>8. Exercise</h3>
 <p>Now, show Df and Dg are mines, Gg are safe. 
   (Hint: consider Ee+Eg+Fg)</p>
@@ -358,7 +361,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 7
-</pre><div>
+</pre><div class="explain">
 <h3>9. Do trivial things</h3>
 <p>As a result, <br>
   Cf is a mine (Ed+Ee=1). <br>
@@ -389,7 +392,7 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 6
-</pre><div>
+</pre><div class="explain">
 <h3>10. Exercise</h3>
   <p>Prove that Ch is a mine. </p>
 </div>
@@ -419,8 +422,8 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │   │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 5
-</pre><div>
-<h3>10. The number of mines</h3>
+</pre><div class="explain">
+<h3>11. The number of mines</h3>
 <p>There rest 5 mines, but <br>&nbsp;&nbsp;&nbsp;&nbsp;
   Ea + Eb = 1,<br>&nbsp;&nbsp;&nbsp;&nbsp;
   Ed + Ee = 1,<br>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -454,8 +457,8 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │ 2 │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 5
-</pre><div>
-<h3>11. The rest is easy</h3>
+</pre><div class="explain">
+<h3>12. The rest is easy</h3>
 <p>The rest is easy. 
   </p>
 </div>
@@ -484,8 +487,8 @@ G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │ 2 │
 H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │ # │ # │
   └───┴───┴───┴───┴───┴───┴───┴───┘
 Rest: 0
-</pre><div>
-<h3>12. Finished!</h3>
+</pre><div class="explain">
+<h3>13. Finished!</h3>
 <p>We are done.
   </p>
 </div>
