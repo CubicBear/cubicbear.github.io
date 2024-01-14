@@ -28,7 +28,7 @@ I strongly recommand the game <a href="https://nyahoon.com/products/chocolate-sw
   We made up such Minesweeper into a "perfect" puzzle game. I use "perfect" to mean that no guesses are required to solve puzzles, or even more strictly, <b>no guesses are allowed</b>. Only the squares (means "chocolate cubes" in this game) that are certainly safe can be uncovered (eaten).
   </cite>
   </div>
-I am going to give an example of how it works. You can try me example <a href="http://games.nyahoon.com/cs/preview?a=I6vqQVBXhZe49wghtB&b=D">online</a>.
+I am going to give an example of how it works. You can try my example <a href="http://games.nyahoon.com/cs/preview?a=I6vqQVBXhZe49wghtB&b=D">online</a>.
   
   
 <div class="steps" style="padding:20px" >
@@ -182,8 +182,12 @@ But <br>&nbsp;&nbsp;&nbsp;&nbsp;
 De + Ce &lt;= 1, since Cd=2. <br>
 This means all the "="'s are achieved. So<br>  &nbsp;&nbsp;&nbsp;&nbsp;
 Ed + Ee = 1, De + Ce = 1. <br>
-So Ef is safe; BC, Bd, Be are safe (so Bb is a mine). 
 </p>
+
+<p>
+  It follows that 
+Ef and Gf are safe (so Hf is a mine); BC, Bd, Be are safe (so Bb is a mine).
+  </p> 
 </div>
 </div>
 </div>
@@ -207,11 +211,11 @@ E │   │   │ 2 │   │   │ 3 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
 F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
-Rest: 15
+Rest: 14
 </pre><div>
 <h3>5. Exercise</h3>
 <p>
@@ -242,11 +246,11 @@ E │   │   │ 2 │   │   │ 3 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
 F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
-Rest: 15
+Rest: 14
 </pre><div>
 <h3>6. Intersection</h3>
 Consider Ac + Ad<br>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -277,11 +281,11 @@ E │   │   │ 2 │   │   │ 3 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
 F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
-Rest: 13
+Rest: 12
 </pre><div>
 <h3>7. Do trivial things</h3>
 <p>Now, <br>
@@ -312,14 +316,14 @@ E │   │   │ 2 │   │   │ 3 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
 F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
-Rest: 10
+Rest: 9
 </pre><div>
 <h3>8. Exercise</h3>
-<p>Now, show Df and Dg are mines, Gf, Gg are safe. 
+<p>Now, show Df and Dg are mines, Gg are safe. 
   (Hint: consider Ee+Eg+Fg)</p>
 </div>
 </div>
@@ -344,15 +348,14 @@ F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
 G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │   │
   ├───┼───┼───┼───┼───┼───┼───┼───┤
-H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
   └───┴───┴───┴───┴───┴───┴───┴───┘
-Rest: 8
+Rest: 7
 </pre><div>
 <h3>9. Do trivial things</h3>
 <p>As a result, <br>
-  Hf is a mine; <br>
   Cf is a mine (Ed+Ee=1). <br>
-  Af, Bf are sage. <br>
+  Af, Bf are safe. <br>
 </div>
 </div>
 </div>
