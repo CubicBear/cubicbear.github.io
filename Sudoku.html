@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+	<link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width">
+    <style>
+        .step {
+          display: none;
+        }
+        
+        .step.active {
+          display: block;
+        }
+      .explain {
+        min-width: 300px
+      }
+      pre {
+      line-height: 0.6; /* 或者设置为其他小于 1 的值，如 0.8 */
+    }
+        
+    @font-face {
+        font-family: 'mononoki';
+        src: url('mononoki-Regular.otf') format('opentype'),
+            url('mononoki-Regular.ttf') format('truetype');
+    }
+    pre {font-family: 'mononoki', monospace !important;}
+    </style>
+    <title>Minesweeper</title>
+</head>
+
+<body>
+  
+  
+<div class="steps" style="padding:20px" >
+<button class="firststep">|&lt;</button>
+<button class="prevstep">&lt;&lt;</button>
+<button class="nextstep">&gt;&gt;</button>
+<button class="laststep">&gt;|</button>
+  
+  <div class="step">
+  <div style="display:flex">        
+  <pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   i
+  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+  ║123│┌─┐│   ║   │   │   ║   │   │   ║
+A ║456││5││   ║   │   │   ║   │   │   ║
+  ║789│└─┘│   ║   │   │   ║   │   │   ║
+  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+  ║   │   │   ║   │   │   ║   │   │   ║
+B ║   │   │   ║   │   │   ║   │   │   ║
+  ║   │   │   ║   │   │   ║   │   │   ║
+  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+  ║   │   │   ║   │   │   ║   │   │   ║
+C ║   │   │   ║   │   │   ║   │   │   ║
+  ║   │   │   ║   │   │   ║   │   │   ║
+  ╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
+  ║   │   │   ║   │   │   ║   │   │   ║
+D ║   │   │   ║   │   │   ║   │   │   ║
+  ║   │   │   ║   │   │   ║   │   │   ║
+  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+  ║   │   │   ║   │   │   ║   │   │   ║
+E ║   │   │   ║   │   │   ║   │   │   ║
+  ║   │   │   ║   │   │   ║   │   │   ║
+  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+  ║   │   │   ║   │   │   ║   │   │   ║
+F ║   │   │   ║   │   │   ║   │   │   ║
+  ║   │   │   ║   │   │   ║   │   │   ║
+  ╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
+  ║   │   │   ║   │   │   ║   │   │   ║
+G ║   │   │   ║   │   │   ║   │   │   ║
+  ║   │   │   ║   │   │   ║   │   │   ║
+  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+  ║   │   │   ║   │   │   ║   │   │   ║
+H ║   │   │   ║   │   │   ║   │   │   ║
+  ║   │   │   ║   │   │   ║   │   │   ║
+  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+  ║   │   │   ║   │   │   ║   │   │   ║
+I ║   │   │   ║   │   │   ║   │   │   ║
+  ║   │   │   ║   │   │   ║   │   │   ║
+  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+   </pre>
+      <div class="explain">
+    <h3>1. ?</h3>
+    <p> Explanation</p>
+  </div>
+  </div>
+  </div>
+
+  
+  
+</div>
+
+
+    <script>
+        var prevstepElements = document.querySelectorAll('.prevstep')
+        prevstepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, -1)});
+        });
+        var nextstepElements = document.querySelectorAll('.nextstep')
+        nextstepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, 1)});
+        });
+        var stepElements = document.querySelectorAll('.step')
+        stepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, 1)});
+        });
+        
+        var firststepElements = document.querySelectorAll('.firststep')
+        firststepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, 'first')});
+        });
+        
+        var laststepElements = document.querySelectorAll('.laststep')
+        laststepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, 'last')});
+        });
+        
+        function changeStep(element, direction) {
+          const steps = element.parentElement.querySelectorAll('.step');
+          let currentStepIndex;
+          for (let i = 0; i < steps.length; i++) {
+            if (steps[i].classList.contains('active')) {
+              currentStepIndex = i;
+              break;
+            }
+          }
+        
+          if (currentStepIndex !== undefined) {
+            steps[currentStepIndex].classList.remove('active');
+          }
+        
+          let targetStepIndex;
+        
+          if (direction === 'first') {
+            targetStepIndex = 0;
+          } else if (direction === 'last') {
+            targetStepIndex = steps.length - 1;
+          } else {
+            targetStepIndex = currentStepIndex + direction;
+            
+            if (targetStepIndex < 0) {
+              targetStepIndex = 0;  // 防止小于第一步
+            } else if (targetStepIndex >= steps.length) {
+              targetStepIndex = steps.length - 1;  // 防止大于最后一步
+            }
+          }
+        
+          steps[targetStepIndex].classList.add('active');
+        }
+        
+        // 初始显示第一个步骤
+        var stepsElements = document.querySelectorAll('.steps')
+        stepsElements.forEach(function (element) {
+            element.querySelector('.step').classList.add('active');
+        });
+        
+    </script>
+<hr>
+<a href="/">home</a>
+</body>
+</html>
