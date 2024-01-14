@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .step {
+          display: none;
+        }
+        
+        .step.active {
+          display: block;
+        }
+    </style>
+    <title>Minesweeper</title>
+</head>
+
+<body>
+
+
+<h2>Introduction to Minesweeper</h2>
+  
+<a href="https://en.wikipedia.org/wiki/Minesweeper_(video_game)">Minesweeper</a> is a <b>logic puzzle</b> video game genre generally played on personal computers.
+I strongly recommand the game <a href="https://nyahoon.com/products/chocolate-sweeper">chocolate sweeper</a>. As explained in the preview page
+<div style="padding:3%">
+ <cite>
+  We made up such Minesweeper into a "perfect" puzzle game. I use "perfect" to mean that no guesses are required to solve puzzles, or even more strictly, <b>no guesses are allowed</b>. Only the squares (means "chocolate cubes" in this game) that are certainly safe can be uncovered (eaten).
+  </cite>
+  </div>
+I am going to give an example of how it works. You can try me example <a href="http://games.nyahoon.com/cs/preview?a=I6vqQVBXhZe49wghtB&b=D">online</a>.
+  
+  
+<div class="steps" style="padding:20px" >
+
+        <button class="firststep">|&lt;</button>
+        <button class="prevstep">&lt;&lt;</button>
+        <button class="nextstep">&gt;&gt;</button>
+        <button class="laststep">&gt;|</button>
+  
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 17
+</pre><div>
+<h3>1. Obvious mine</h3>
+<p> Since Gc=1, it is clear that Fd is a mine.</p>
+<p> Since Fd is a mine, Fe must be safe. </p>
+  </div>
+</div>
+      
+</div>
+
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 16
+</pre><div>
+<h3>2. Exclusion</h3>
+<p>Note that <br>&nbsp;&nbsp;&nbsp;&nbsp;
+Ea + Eb = 1 since Fa=1; <br>&nbsp;&nbsp;&nbsp;&nbsp;
+Ea + Eb + Ec = 1 since Fb=1; <br>
+Thus Ec is safe. 
+</p>
+
+<p>Note that <br>&nbsp;&nbsp;&nbsp;&nbsp;
+Hf + Gf = 1 since He=1; <br>&nbsp;&nbsp;&nbsp;&nbsp;
+Hf + Gf + Ff = 1 since Ge=2; <br>
+Thus Ff is safe. 
+</p>
+</div>
+</div>
+      
+</div>
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 16
+</pre><div>
+<h3>3. Exercises</h3>
+<p>Exercise: now, prove Db, Dc, Dd are all safe. 
+  (Hint: consider Fc and Ec)
+</p>
+It turns out 
+<pre>
+     b   c   d
+  ─┼───┼───┼───┼─
+D  │ 2 │ 1 │ 2 │ 
+  ─┼───┼───┼───┼─
+</pre>
+<p>Exercise: now, prove Cb, Cc, Cd are all safe.
+</p>
+
+</div>
+</div>
+</div>
+
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │   │ 2 │ 1 │ 1 │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │   │ 2 │ 1 │ 2 │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 16
+</pre><div>
+<h3>4. Inequality</h3>
+<p>
+Note that <br>&nbsp;&nbsp;&nbsp;&nbsp;
+Ed + Ee &lt;= 1, since Fe=2. <br>
+This implies <br>&nbsp;&nbsp;&nbsp;&nbsp;
+De + Ce &gt;= 1, since Dd=2. <br>
+But <br>&nbsp;&nbsp;&nbsp;&nbsp;
+De + Ce &lt;= 1, since Cd=2. <br>
+This means all the "="'s are achieved. So<br>  &nbsp;&nbsp;&nbsp;&nbsp;
+Ed + Ee = 1, De + Ce = 1. <br>
+So Ef is safe; BC, Bd, Be are safe (so Bb is a mine). 
+</p>
+</div>
+</div>
+</div>
+  
+
+
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │   │ # │ 2 │ 3 │ 3 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │   │ 2 │ 1 │ 1 │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │   │ 2 │ 1 │ 2 │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │ 3 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 15
+</pre><div>
+<h3>5. Exercise</h3>
+<p>
+Prove that Ba is safe. (Hint: <br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Ea + Eb = 1 <br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Da + Ca = 1 <br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Da + Ca + Ba = 1 )
+</p>
+</div>
+</div>
+</div>
+
+
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │   │   │   │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │ 2 │ # │ 2 │ 3 │ 3 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │   │ 2 │ 1 │ 1 │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │   │ 2 │ 1 │ 2 │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │ 3 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 15
+</pre><div>
+<h3>6. Intersection</h3>
+Consider Ac + Ad<br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Ac + Ad != 2 since Bc=2<br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Ac + Ad != 0 since Bd=3<br>
+This implies Ac+Ad=1, so Ab is safe and Ae and Ce are mines. 
+<p>
+</p>
+</div>
+</div>
+</div>
+  
+
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │   │ 3 │   │   │ # │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │ 2 │ # │ 2 │ 3 │ 3 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │   │ 2 │ 1 │ 1 │ # │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │   │ 2 │ 1 │ 2 │   │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │ 3 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 13
+</pre><div>
+<h3>7. Do trivial things</h3>
+<p>Now, <br>
+  Aa and Ac are mines;<br>
+  Ad, Ca are safe; <br>
+  Da is a mine; <br>
+  De is safe. 
+</p>
+</div>
+</div>
+</div>
+  
+
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │ # │ 3 │ # │ 2 │ # │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │ 2 │ # │ 2 │ 3 │ 3 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │ 2 │ 2 │ 1 │ 1 │ # │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │ # │ 2 │ 1 │ 2 │ 4 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │ 3 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 10
+</pre><div>
+<h3>8. Exercise</h3>
+<p>Now, show Df and Dg are mines, Gf, Gg are safe. 
+  (Hint: consider Ee+Eg+Fg)</p>
+</div>
+</div>
+</div>
+  
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │ # │ 3 │ # │ 2 │ # │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │ 2 │ # │ 2 │ 3 │ 3 │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │ 2 │ 2 │ 1 │ 1 │ # │   │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │ # │ 2 │ 1 │ 2 │ 4 │ # │ # │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │ 3 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │   │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 8
+</pre><div>
+<h3>9. Do trivial things</h3>
+<p>As a result, <br>
+  Hf is a mine; <br>
+  Cf is a mine (Ed+Ee=1). <br>
+  Af, Bf are sage. <br>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │ # │ 3 │ # │ 2 │ # │ 1 │ 1 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │ 2 │ # │ 2 │ 3 │ 3 │ 3 │ 3 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │ 2 │ 2 │ 1 │ 1 │ # │ # │ 5 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │ # │ 2 │ 1 │ 2 │ 4 │ # │ # │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │ 3 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 6
+</pre><div>
+<h3>10. Exercise</h3>
+  <p>Prove that Ch is a mine. </p>
+</div>
+</div>
+</div>
+  
+
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │ # │ 3 │ # │ 2 │ # │ 1 │ 1 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │ 2 │ # │ 2 │ 3 │ 3 │ 3 │ 3 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │ 2 │ 2 │ 1 │ 1 │ # │ # │ 5 │ # │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │ # │ 2 │ 1 │ 2 │ 4 │ # │ # │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │ 3 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │   │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 5
+</pre><div>
+<h3>10. The number of mines</h3>
+<p>There rest 5 mines, but <br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Ea + Eb = 1,<br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Ed + Ee = 1,<br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Ah + Bh = 1,<br>&nbsp;&nbsp;&nbsp;&nbsp;
+  Fg + Fh + Gh + Hg + Hh = 2.<br>
+So Eg, Eh, Dh are safe. 
+  </p>
+</div>
+</div>
+</div>
+  
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │ # │ 3 │ # │ 2 │ # │ 1 │ 1 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │ 2 │ # │ 2 │ 3 │ 3 │ 3 │ 3 │   │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │ 2 │ 2 │ 1 │ 1 │ # │ # │ 5 │ # │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │ # │ 2 │ 1 │ 2 │ 4 │ # │ # │ 2 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │   │   │ 2 │   │   │ 3 │ 2 │ 1 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │ 0 │ 0 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │ 2 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │   │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 5
+</pre><div>
+<h3>11. The rest is easy</h3>
+<p>The rest is easy. 
+  </p>
+</div>
+</div>
+</div>
+  
+<div class="step">
+<div style="display:flex">        
+<pre style="padding: 20px;">
+    a   b   c   d   e   f   g   h   
+  ┌───┬───┬───┬───┬───┬───┬───┬───┐
+A │ # │ 3 │ # │ 2 │ # │ 1 │ 1 │ 1 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+B │ 2 │ # │ 2 │ 3 │ 3 │ 3 │ 3 │ # │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+C │ 2 │ 2 │ 1 │ 1 │ # │ # │ 5 │ # │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+D │ # │ 2 │ 1 │ 2 │ 4 │ # │ # │ 2 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+E │ # │ 2 │ 2 │ 2 │ # │ 3 │ 2 │ 1 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+F │ 1 │ 1 │ 2 │ # │ 2 │ 1 │ 0 │ 0 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+G │ 0 │ 0 │ 1 │ 1 │ 2 │ 2 │ 3 │ 2 │
+  ├───┼───┼───┼───┼───┼───┼───┼───┤
+H │ 0 │ 0 │ 0 │ 0 │ 1 │ # │ # │ # │
+  └───┴───┴───┴───┴───┴───┴───┴───┘
+Rest: 0
+</pre><div>
+<h3>12. Finished!</h3>
+<p>We are done.
+  </p>
+</div>
+</div>
+</div>
+  
+  
+    </div>
+
+
+    <script>
+        var prevstepElements = document.querySelectorAll('.prevstep')
+        prevstepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, -1)});
+        });
+        var nextstepElements = document.querySelectorAll('.nextstep')
+        nextstepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, 1)});
+        });
+        
+        var firststepElements = document.querySelectorAll('.firststep')
+        firststepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, 'first')});
+        });
+        
+        var laststepElements = document.querySelectorAll('.laststep')
+        laststepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, 'last')});
+        });
+        
+        function changeStep(element, direction) {
+          const steps = element.parentElement.querySelectorAll('.step');
+          let currentStepIndex;
+          for (let i = 0; i < steps.length; i++) {
+            if (steps[i].classList.contains('active')) {
+              currentStepIndex = i;
+              break;
+            }
+          }
+        
+          if (currentStepIndex !== undefined) {
+            steps[currentStepIndex].classList.remove('active');
+          }
+        
+          let targetStepIndex;
+        
+          if (direction === 'first') {
+            targetStepIndex = 0;
+          } else if (direction === 'last') {
+            targetStepIndex = steps.length - 1;
+          } else {
+            targetStepIndex = currentStepIndex + direction;
+            
+            if (targetStepIndex < 0) {
+              targetStepIndex = 0;  // 防止小于第一步
+            } else if (targetStepIndex >= steps.length) {
+              targetStepIndex = steps.length - 1;  // 防止大于最后一步
+            }
+          }
+        
+          steps[targetStepIndex].classList.add('active');
+        }
+        
+        // 初始显示第一个步骤
+        var stepsElements = document.querySelectorAll('.steps')
+        stepsElements.forEach(function (element) {
+            element.querySelector('.step').classList.add('active');
+        });
+        
+    </script>
+
+</body>
+
+</html>
