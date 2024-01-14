@@ -12,6 +12,10 @@
         .step.active {
           display: block;
         }
+      .explain {
+        padding-left: 10px;
+        //min-width: 300px
+      }
       pre {
       font-size: 50%; 
     }
@@ -50,7 +54,7 @@ I am going to give an example of how it works. You can try my example <a href="h
   
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │   │   │   │   │   │   │   │   │
@@ -81,7 +85,7 @@ Rest: 17
 
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │   │   │   │   │   │   │   │   │
@@ -120,7 +124,7 @@ Thus Ff is safe.
 </div>
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │   │   │   │   │   │   │   │   │
@@ -161,7 +165,7 @@ D  │ 2 │ 1 │ 2 │
 
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │   │   │   │   │   │   │   │   │
@@ -206,7 +210,7 @@ Ef and Gf are safe (so Hf is a mine); BC, Bd, Be are safe (so Bb is a mine).
 
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │   │   │   │   │   │   │   │   │
@@ -241,7 +245,7 @@ Prove that Ba is safe. (Hint: <br>&nbsp;&nbsp;&nbsp;&nbsp;
 
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │   │   │   │   │   │   │   │   │
@@ -276,7 +280,7 @@ This implies Ac+Ad=1, so Ab is safe and Ae and Ce are mines.
 
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │   │ 3 │   │   │ # │   │   │   │
@@ -311,7 +315,7 @@ Rest: 12
 
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │ # │ 3 │ # │ 2 │ # │   │   │   │
@@ -341,7 +345,7 @@ Rest: 9
   
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │ # │ 3 │ # │ 2 │ # │   │   │   │
@@ -372,7 +376,7 @@ Rest: 7
 
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │ # │ 3 │ # │ 2 │ # │ 1 │ 1 │   │
@@ -402,7 +406,7 @@ Rest: 6
 
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │ # │ 3 │ # │ 2 │ # │ 1 │ 1 │   │
@@ -437,7 +441,7 @@ So Eg, Eh, Dh are safe.
   
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │ # │ 3 │ # │ 2 │ # │ 1 │ 1 │   │
@@ -467,7 +471,7 @@ Rest: 5
   
 <div class="step">
 <div style="display:flex">        
-<pre style="padding: 20px;">
+<pre>
     a   b   c   d   e   f   g   h   
   ┌───┬───┬───┬───┬───┬───┬───┬───┐
 A │ # │ 3 │ # │ 2 │ # │ 1 │ 1 │ 1 │
