@@ -509,6 +509,11 @@ Rest: 0
         	  element.addEventListener('click', function () {
               changeStep(element, 1)});
         });
+        var stepElements = document.querySelectorAll('.step')
+        stepElements.forEach(function (element) {
+        	  element.addEventListener('click', function () {
+              changeStep(element, 1)});
+        });
         
         var firststepElements = document.querySelectorAll('.firststep')
         firststepElements.forEach(function (element) {
