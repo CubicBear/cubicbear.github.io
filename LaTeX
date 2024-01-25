@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Tutorial on LaTeX</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+    <script src="https://davidcarlisle.github.io/latexcgi/runlatex.js"></script>
+    <script>
+
+      runlatex.editorlines=40;
+      runlatex.adddefaultpreamble=true;
+      runlatex.adddefaultengine=true;
+
+      runlatex.overleafURI=null; //"https://www.overleaf.com/docs";
+      
+      runlatex.texts ={
+	  "Open in Overleaf": "Open in Overleaf",
+	  "TeXLive.net":      "Compile at TeXLive", 
+	  "Delete Output":    "Delete Output",
+	  "Compiling PDF":    "Compiling PDF",
+	  "Added Code":       "",
+	  "End Added Code":   "",
+	  "Top Caption":      "",
+      }
+
+    </script>
+
+
+</head>
+<body>
+
+<h2>Tutorial on LaTeX</h2>
+
+Useful tools: 
+<ul>
+  <li><a href="https://detexify.kirelabs.org/classify.html">Detexify<a></li>
+    <li><a href="https://www.overleaf.com">Overleaf</a> and 
+      (<a href="https://www.overleaf.com/learn">documentation</a>)</li>
+    <li><a href="https://3142.nl/latex-diff/">Online LaTeXdiff</a></li>
+    <li><a href="https://snip.mathpix.com/home">Mathpix</a></li>
+    <li><a href="https://www.mathcha.io/">Mathcha</a></li>
+  </ul>
+  
+<div class="h">
+<pre id="pre0">\documentclass{article}
+\usepackage[a6paper]{geometry}
+\usepackage{amsmath}
+\begin{document}
+1
+\end{document}</pre>
+</div>
+
+  
+<hr>
+<a href="/">home</a>
+</body>
+</html>
