@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Hodge diamond of Plücker hypersurface</title>
+	
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles","fullScreen"], 
+          evalButtonText: 'Evaluate'});
+</script>
+<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>
+   <script type="text/javascript">
+      MathJax = {
+         tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true  
+         },
+         svg: {
+            fontCache: 'global'
+         }
+      };
+   </script>
+<style>
+    @font-face {
+        font-family: 'mononoki';
+        src: url('mononoki-Regular.otf') format('opentype'),
+            url('mononoki-Regular.ttf') format('truetype');
+    }
+    * {font-family: 'mononoki', monospace !important;}
+    h1 {font-family: system-ui !important;}
+    h2 {font-family: system-ui !important;}
+    h3 {font-family: system-ui !important;}
+    a {font-family: system-ui !important;}
+</style>
+</head>
+<body>
+<h2>Hodge diamond of a smooth Plücker hypersurfaces in Grassmannian</h2>
+
+<div id="Activate" visibility: hidden>
+  <script type="text/x-sage">
+
+S = PolynomialRing(QQ,"y"); y = S.gen()
+import time 
+
+def Ptts(k,n): 
+    if k == 1:
+        for i in [0..n-k]:
+            yield (i,)
+        return
+    for ptt in Ptts(k-1,n-1): 
+        for i in [0..ptt[-1]]: 
+            yield ptt+(i,)
+
+def Add(A,m):
+    for i in [A[m-1]+1..n-k]:
+        j = m
+        while j!=1 and A[j-2]<i: 
+            j-=1
+        newA = list(A)
+        newA[j-1] = i
+        for l in [j+1..m]: 
+            newA[l-1] = A[l-2]+1
+        yield (tuple(newA),i-1-A[m-1],m-j)
+
+
+
+def compute(k,n):
+    GrPtt = sorted(list(Ptts(k,n)),key = lambda A: sum(A))
+    ind = {}
+    i = 0
+    for A in GrPtt:
+        ind[A]=i
+        i+=1
+#     print(len(GrPtt))
+
+    v = matrix([[(-y)^(sum(A))] for A in GrPtt])
+    u = matrix([(-y)^(k*(n-k)-sum(A)) for A in GrPtt])
+    # =============================
+    start_time=time.time()
+    # =============================
+
+    Adding_rec = {}
+    for A in GrPtt: 
+        for m in [1..k]: 
+            Adding_rec[(A,m)] = list(Add(A,m))
+
+    # # =============================
+    # print("computing the matrix of adding ribbons "+str(time.time()-start_time)+"s")
+    # # =============================
+
+    def Che(A,row_leq): 
+        if row_leq == 0: 
+            yield (A,1)
+            return
+        for (B,coe) in Che(A,row_leq-1):
+            yield (B,coe)
+            for (C,wd,ht) in Adding_rec[(B,row_leq)]:
+                yield (C,-(1+y)*coe*(-y)^wd)
+
+    Det = [[0 for B in GrPtt] for A in GrPtt]
+    for A in GrPtt: 
+        for (B,coe) in Che(A,k): 
+            Det[ind[B]][ind[A]] += coe
+    Det = matrix(Det)
+
+    # =============================
+    print(str(time.time()-start_time)+"s: "+"computing the Pieri matrix.")
+    # =============================
+    
+    # =============================
+    start_time=time.time()
+    # =============================
+
+    my_time = []
+    v_exp = (1+y*Det).solve_right(v)*(1+y)
+    # =============================
+    print(str(time.time()-start_time)+"s: "+"computing the SMC expansion ")
+    # =============================
+    
+    HGrs = S(q_binomial(n,k)(q=-y))
+    HHyp = HGrs - S((u*v_exp)[0][0])
+    HGrs = list(HGrs.coefficients())
+    HHyp = list(HHyp.coefficients())
+    comp_dim = len(HHyp)
+    if comp_dim%2 ==0:
+        mid_dim = int(comp_dim/2)
+        mid_col = [(-1)^i*HGrs[i] for i in range(comp_dim+1) if i!= mid_dim]
+        mid_row = [(-1)^(comp_dim+1-i)*(HHyp[i]-(-1)^i*mid_col[i]) for i in range(comp_dim)]
+    if comp_dim%2 ==1:
+        mid_dim = int(comp_dim/2)
+        mid_col = [(-1)^i*HGrs[i] for i in range(comp_dim+1) if i!= mid_dim]
+        mid_row = [(-1)^(comp_dim+1-i)*(HHyp[i]-(-1)^i*mid_col[i]) for i in range(comp_dim)]
+        mid_col[mid_dim]=(-1)^mid_dim*HHyp[mid_dim]
+        mid_row[mid_dim]=(-1)^mid_dim*HHyp[mid_dim]
+    print("Y⊂Gr("+str(k)+","+str(n)+")")
+    res = ""; 
+    for _ in HGrs: res+=str(abs(_))+" "
+    print("Grassm :"+"["+res[:-1]+"]")
+#     res = ""; 
+#     for _ in HHyp: res+=str(abs(_))+" "
+#     print("Hyperp :"+"["+res[:-1]+"]")
+    res = ""; 
+    for _ in mid_col: res+=str(_)+" "
+    print("mid_col:"+"["+res[:-1]+"]")
+    res = ""; 
+    for _ in mid_row: res+=str(_)+" "
+    print("mid_row:"+"["+res[:-1]+"] "+str(sum(mid_row)))
+  </script>
+</div>
+
+
+We compute the Hodge diamond of a smooth Plücker hypersurfaces in Grassmannian \(\operatorname{Gr}(k,n)\).
+
+<div class="compute">
+  <script type="text/x-sage">
+k = 3; n = 9
+compute(k,n)
+  </script>
+ </div>
+
+
+
+<hr>
+<a href="/">home</a>
+</body>
+</html>
