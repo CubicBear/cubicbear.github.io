@@ -3,7 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
+<script type="text/javascript"
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!--<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>-->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [['$$', '$$']],
+      processEscapes: true
+    }
+  });
+</script>
+ <link rel="stylesheet" href="style.css">
     <style>
         .iframe-container {
             display: flex;
@@ -21,8 +36,13 @@
 <title>Motivic Lefschetz Theorem for twisted Milnor Hypersurfaces</title>
 </head>
 <body>
-<h2>Motivic Lefschetz Theorem for twisted Milnor Hypersurfaces</h2>
+<h2>Compounds of five tetrahedra</h2>
 
+<p>
+In the paper <i>Motivic Lefschetz Theorem for twisted Milnor Hypersurfaces</i>, we associate a graph to a hyperplane section in a twisted Milnor hypersurface according to its toric fixed points and toric stable curves. 
+When $n=5$, there are $20$ vertices which can be distributed as vertices of a regular dodecahedron. Two types of edges then form two families <a href="https://en.wikipedia.org/wiki/Polytope_compound">(compounds) of 5 tetrahedra</a>. 
+We constructed $5$ classes each of which is supported over a single tetrahedron on the left diagram, and the monodromy action is given by rotations. 
+</p>
 
     <div class="iframe-container">
         <iframe src="/MotLefGraphLeft"></iframe>
