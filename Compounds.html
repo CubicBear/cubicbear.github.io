@@ -21,17 +21,27 @@
 </script>
  <link rel="stylesheet" href="style.css">
     <style>
-        .iframe-container {
-            display: flex;
-            justify-content: space-between;
-            margin: 2%;
-        }
+    .iframe-container {
+        width: 100%;
+        position: relative;
+        margin-bottom: 20px;
+    }
 
-        .iframe-container iframe {
-            width: 48%;
-            aspect-ratio: 1/1; 
-            border: 0px solid #ccc;
+    .iframe-container iframe {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/1; /* Maintain aspect ratio */
+        border: none;
+    }
+
+    @media screen and (min-width: 500px) {
+        .iframe-container {
+        	margin: 2%;
+            width: 45%; /* Set to 45% when screen width >= 500px */
+            float: left;
         }
+        
+    }
     </style>
  
 <title>Motivic Lefschetz Theorem for twisted Milnor Hypersurfaces</title>
@@ -47,6 +57,8 @@ We constructed $5$ classes each of which is supported over a single tetrahedron 
 
     <div class="iframe-container">
         <iframe src="/MotLefGraphLeft"></iframe>
+    </div>
+    <div class="iframe-container">
         <iframe src="/MotLefGraphRight"></iframe>
     </div>
 
