@@ -253,6 +253,78 @@ def PB_print(xxx,n=None):
     res += "weight = " +str(weight(xxx))
     return res
 
+def PB_latex(xxx,n=None):
+    # find the number if indices we need
+    if n == None: 
+        Alp = []
+        for row in xxx: 
+            for tile in row: 
+                Alp = Alp+[tile[0],tile[1]]+list(tile[2])+list(tile[3])
+        n = max(Alp+[1])
+#     return n
+    res = "\\keyPD{\n"
+    # the tile and the lower wall
+    for row in xxx:
+        res += ("\\M{"+str(row[0][0])+"}" if (row[0][0])!=0 else "\\M{}" )
+        for tile in row: 
+            grouptile="\\G{"
+            # the tiles
+            if tile[0] == tile[1] == 0:
+                for i in [1..n]:
+                    grouptile+=("\\I" if i in tile[2] else "\\O")
+            elif tile[0] == tile[1] != 0:
+                for i in [1..n]:
+                    grouptile+=("\\X" if i in tile[2] else "\\H")
+            elif tile[0] !=0 and tile[1] == 0:
+                for i in [1..tile[0]-1]:
+                    grouptile+=("\\X" if i in tile[2] else "\\H")
+                grouptile+=("\\J" if tile[0] in tile[2] else "\\Z")
+                for i in [tile[0]+1..n]:
+                    grouptile+=("\\I" if i in tile[2] else "\\O")
+            elif tile[0] ==0 and tile[1] != 0:
+                for i in [1..tile[1]-1]:
+                    grouptile+=("\\I" if i in tile[2] else "\\O")
+                grouptile+=("\\F" if tile[1] in tile[3] else "\\L")
+                for i in [tile[1]+1..n]:
+                    grouptile+=("\\X" if i in tile[2] else "\\H")
+            elif tile[0] !=0 and tile[1] != 0:
+                for i in [1..tile[0]-1]:
+                    grouptile+=("\\X" if i in tile[2] else "\\H")
+                grouptile+=("\\J" if tile[0] in tile[2] else "\\Z")
+                for i in [tile[0]+1..tile[1]-1]:
+                    grouptile+=("\\I" if i in tile[2] else "\\O")
+                grouptile+=("\\F" if tile[1] in tile[3] else "\\L")
+                for i in [tile[1]+1..n]:
+                    grouptile+=("\\X" if i in tile[2] else "\\H")
+            grouptile+="}"
+            if tile[-1]=="O": 
+#                 res += ("\033[31m"+Alph(tile[1])+"\033[0m" if tile[1] != 0 else "|")
+                grouptile+= ("\\x" if tile[1] != 0 else "  ")
+            else:
+#                 res += (Alph(tile[1]) if tile[1] != 0 else "\033[34m|\033[0m")
+                grouptile+= ("  " if tile[1] != 0 else "\\x")
+#                 res += ("═" if tile[1] != 0 else "x")
+
+        #compute the type of this row
+#         res += "  "+tile[-1]
+    
+#         #compute the weight in this row
+#         weight_this_row=0
+#         for tile in row:
+#             if tile[4] == "O" and tile[1] !=0: 
+#                 weight_this_row += 1
+#             elif tile[4] == "B" and tile[1] ==0: 
+#                 weight_this_row += 1 
+#         res += "  "+str(weight_this_row)
+        
+            res+=grouptile
+        res += ("\\M{"+str(row[-1][1])+"}" if (row[-1][1])!=0 else "\\M{}" )
+        res += "\\\\\n"
+    res=res[:-3]
+    res+="}"
+    return res
+    
+
 def weight(xxx): 
     res = [None] * len(xxx)
     for row in xxx: 
@@ -272,6 +344,8 @@ class keyPD(list):
         return PB_print(self)
     def weight(self):
         return weight(self)
+    def latex(self):
+        return PB_latex(self)
 
     
 def HPD(comp,OB_seq,width=None,ll=None, rr=None): 
