@@ -130,12 +130,12 @@ We can compute it using the following code. </p>
 <div class="compute">
   <script type="text/x-sage">
 record={0:0,1:1} # F_0=1, and F_1=1
-def Feb(n): # define a function
+def Fib(n): # define a function
 	if n not in record.keys():
-		record[n] = record[n-1] + record[n-2]
+		record[n] = Fib(n-1) + Fib(n-2)
 	return record[n] 
 for n in range(10): 
-	print("F_"+str(n)+" is "+str(Feb(n)))
+	print("F_"+str(n)+" is "+str(Fib(n)))
 print(record)
 </script>
 </div>
