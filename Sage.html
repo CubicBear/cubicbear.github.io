@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
-	
+  
 <title>Tutorial on SageMath</title>
 
 <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
@@ -28,48 +28,78 @@
 <h2>Tutorial on SageMath</h2>
 	
 <h3>Introduction</h3>
-
-<p>
-  I will give an introduction of <a href="https://www.sagemath.org/index.html">SageMath</a> here.
-  The main features of SageMath:
-  <ol>
-    <li>SageMath is a <a href="https://en.wikipedia.org/wiki/Computer_algebra_system">computer algebra system</a>;</li>
-    <li>SageMath uses a syntax resembling <a href="https://www.python.org/">Python</a>'s;</li>
-    <li>SageMath covers many aspects of discrete mathematics.</li>
-  </ol>
-  The main reference is its <a href="https://doc.sagemath.org/html/en/index.html">official documentation</a>.
+  <p><a href="https://www.sagemath.org/index.html">SageMath</a> is mainly a computer algebra system based on <a href="https://www.python.org/">Python</a>, which is very popular in discrete mathematics. SageMath is a free open-source software. 
+    As a "consequence", not all of the <a href="https://doc.sagemath.org/html/en/index.html">documentations</a> are written for generic computer users (see this <a href="https://www.reddit.com/r/ProgrammerHumor/comments/7r3hvl/if_the_authors_of_programming_textbooks_wrote/" title = "If the authors of computer programming books wrote arithmetic text books">meme</a>). 
+    The main aim of this article is an attempt of making up the gaps.
 </p>
 
+<h3>Getting Start</h3>
 <p>
-After installing SageMath, you will have a shortcut to Jupyter (SageMath Notebook). We usually write SageMath code there. 
-You can also try SageMath <a href="https://sagecell.sagemath.org/">online</a>. 
-</p><p>
-In general, most of the commands/methods you need can be found by searching on the internet (very similar to the situation of LaTeX). 
-Well, sometimes you can understand the full story only after hundreds of guessing, testing, and comparing so many documents, which is very similar to math research,
-	see this <a href="https://www.reddit.com/r/ProgrammerHumor/comments/7r3hvl/if_the_authors_of_programming_textbooks_wrote/" title = "If the authors of computer programming books wrote arithmetic text books">meme</a>.
-I think most of readers already get used to this feeling for many years, so let me share with you something different. 
-I will focus more on "programming", say how to design your algorithm.
-I hope you will feel SageMath is not only an advanced calculator. 
+  You can have a quick try of SageMath online via <a href="https://sagecell.sagemath.org/">SageCell</a>. 
+  It also provides a way to embed Sage computations into any webpage like this. 
+  </p>
+  
+<div class="compute">
+<script type="text/x-sage">
+# write your code here
+print("hello world!")
+</script>
+</div>
 
+<p>
+  You can also use <a href="https://cocalc.com/">CoCalc</a> in the cloud (online). 
+  When using it, it is recommended to start with creating a <a href="https://jupyter.org/">Jupyter Notebook</a> with kernel the lastest SageMath.
+  </p>
+<p>
+  If you do hope to download and install SageMath, it will be complicated. 
+  Here are some useful links providing some hints:  
+<a href="https://github.com/sagemath/sage-windows/releases">Windows</a>,
+<a href="https://www.sagemath.org/download.html">Binaries</a>, 
+<a href="https://www.sagemath.org/download-source.html">Sources</a>. 
+  After installation, it is strongly suggested to use the shortcut "SageMath n.m Notebook" which links to a Jupyter Notebook. 
+  </p>
+  
+<p>
+  There are two official introductory documentations: 
+  <ul>
+    <li><a href="https://www.sagemath.org/tour-quickstart.html">Quick Start</a></li>
+    <li><a href="https://doc.sagemath.org/html/en/a_tour_of_sage/">A Tour of Sage</a></li>
+  </ul>
+They are good so far. 
+The readers are suggested to try SageMath as an advanced calculator by themselves. 
+  </p>
+  
+<div class="compute">
+<script type="text/x-sage">
+print(sqrt(3)) # square roof of 3
+print(5 % 3) # 4 mod 3
+print(factorial(4)) # 5!
 
-</p>
-
-<!--<div id="Activate" visibility: hidden>
-  <script type="text/x-sage">
-def my_fun(x): 
-	print(x)
-print("done")
-# put your code
-  </script>
-</div>-->
+a = 5
+print(a + 2 == 4)
+</script>
+</div>
 
 <h3>Python syntax</h3>
 
-I highly recommend readers to take a close look at the syntax of Python first. 
-This information is readily available in documentation online.
-Here are two examples. 
+<p>
+  Of course, we are only not using SageMath a calculator. Actually, Sage
+Math is based on <a href="https://www.python.org/">Python</a>, and so is its syntax (grammar). So the scientific way is to tell something about Python. 
+  See the <a href="https://wiki.python.org/moin/BeginnersGuide">official documentation</a>.
+  As Python becomes popular recent years, there are many good sources of learning it.  
+</p>
 
-<h4>Collatz conjecture</h4>
+<p>
+To proceed this article, we will assume the readers know the following 
+<ul>
+  <li>string, list, dictionary</li>
+  <li>if (condition), for (loop), def (function)</li>
+</ul>
+Here are two (mathematical) examples. 
+</p>
+
+
+<h4>Example: Collatz conjecture</h4>
 <p>Consider the following operation on an arbitrary positive integer:
 <a>\[n\longmapsto \begin{cases}
 	n/2, & \text{if $n$ is even}, \\
@@ -92,7 +122,7 @@ print("It takes "+str(num_step)+" steps")
 </script>
 </div>
 
-<h4>Fibonacci sequence</h4>
+<h4>Example: Fibonacci sequence</h4>
 <p>Fibonacci sequence is the sequence defined by 
 \[F_0=0,F_1=1, \text{ and } F_n=F_{n-1}+F_{n-2} \text{ when $n\geq 2$}.\]
 We can compute it using the following code. </p>
@@ -110,25 +140,20 @@ print(record)
 </script>
 </div>
 
-<!--Note that the difference of list and tuple (a feature of Python). 
-<p><div class="compute">
-<script type="text/x-sage">
-x = [0,1]; y = x; y[0] = 2; 
-# Say, what is recorded in a list, is not a value, it is the address of the value
-print(x,y) 
-x = (0,1); y = x; y[0] = 2 
-# one cannot change a value in a tuple directly.
-print(x,y) 
-</script>
-</div>
-</p>-->
-
-<h3>Selected Structures in Mathematics
+<h3>Mathematical structures
 </h3>
-Here I give some typical examples of mathematical structures. We refer to the <a href="https://doc.sagemath.org/html/en/index.html">documents</a>, 
-  especially <a href="https://doc.sagemath.org/html/en/constructions/index.html">construction</a> for more structures. 
-  
-<h4>Matrices</h4>
+
+<p>
+Here are some pages frequently used: 
+    <ul>
+      <li><a href="https://doc.sagemath.org/html/en/constructions/linear_algebra.html">Linear Algebra</a></li>
+      <li><a href="https://doc.sagemath.org/html/en/reference/groups/index.html">Group</a></li>
+      <li><a href="https://doc.sagemath.org/html/en/reference/polynomial_rings/index.html">Polynomials</a></li>
+      <li><a href="https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/posets/all.html#sage-combinat-posets-all">Posets</a></li>
+      <li><a href="https://doc.sagemath.org/html/en/reference/graphs/index.html">Graphs</a></li>
+  </ul>
+Here I list some basis example I used a lot.
+</p>
 
 <div class="compute">
   <script type="text/x-sage">
@@ -140,21 +165,7 @@ print(M[2][1],N[4,2])
 </script>
 </div>
 
-<h4>Permutations</h4>
-
-<div class="compute">
-  <script type="text/x-sage">
-G=Permutations(3) 
-x = G([1,3,2]); y = G([2,1,3])
-print(x*y,(x*y).length()) 
-print(list([x(y(i)) for i in [1..3]]))
-# In SageMath, permutations are reversed. 
-</script>
-</div>
-
-
-
-<h4>Polynomials</h4>
+<p></p>
 
 <div class="compute">
   <script type="text/x-sage">
@@ -170,7 +181,39 @@ print((2,0,1,0) in My_dict.keys())
 </script>
 </div>
 
-	<br>
+<p></p>
+
+<div class="compute">
+  <script type="text/x-sage">
+G=Permutations(3) 
+x = G([1,3,2]); y = G([2,1,3])
+print(x*y,(x*y).length()) 
+print(list([x(y(i)) for i in [1..3]]))
+# In SageMath, multiplication of permutations are reversed. 
+</script>
+</div>
+
+<p></p>
+
+<div class="compute">
+  <script type="text/x-sage">
+G = Permutations()
+X = CombinatorialFreeModule(QQ,G,prefix="e")
+e = X.basis()
+f = e[G([1,3,2])]+2*e[Permutation([(1,2,5),(3,4)])]
+print(dict(f))
+# You have to use hashable classes
+</script>
+</div>
+
+<h4>Example: divided difference</h4>
+
+<p>
+Let us consider the divided difference operator
+\[\partial_{a,b}f=\frac{f-f|_{x_a\leftrightarrow x_b}}{x_a-x_b}.\]
+We take the convention that \(\partial_i=\partial_{i,i+1}\).
+</p>
+
 
 <div class="compute">
   <script type="text/x-sage">
@@ -192,24 +235,46 @@ print(divided_difference(0,3)(1))
 </script>
 </div>
 
-<h4>Free modules</h4>
+<h4>Example: Vandermonde determinant</h4>
+
+Recall the Vandermonde identity 
+\[\left|
+\begin{matrix}
+1 &amp; 1 &amp; \cdots &amp; 1\\
+x_1 &amp; x_2 &amp; \cdots &amp; x_n\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+x_1^{n-1} &amp; x_2^{n-1} &amp; \cdots &amp; x_n^{n-1}\\
+\end{matrix}\right|
+=\prod_{1\leq i&lt;j\leq n}(x_i-x_j)\]
 
 <div class="compute">
   <script type="text/x-sage">
-G = Permutations()
-X = CombinatorialFreeModule(QQ,G,prefix="e")
-e = X.basis()
-f = e[G([1,3,2])]+2*e[Permutation([(1,2,5),(3,4)])]
-print(dict(f))
-# You have to use hashable classes
+n = 4
+R = PolynomialRing(QQ,["x"+str(i) for i in range(n)]) # range(n) = [0..n-1]
+x = list(R.gens())
+
+M = Matrix([[x[i]^j for i in range(n)] for j in range(n)])
+LHS = det(M)
+
+RHS = 1 
+for i in range(n):
+    for j in [i+1..n-1]: 
+        RHS *= x[i] - x[j] # equivalently, RHS = RHS * (x[i] - x[j])
+
+print(LHS==RHS)
 </script>
 </div>
 
-<h3>Operators</h3>
+<p>
+    In general, most of the commands/methods you need can be found by searching on the internet (very similar to the situation of LaTeX). Most of them are from the the <a href="https://doc.sagemath.org/html/en/index.html">official documentations</a>. 
+  </p>
 
-There are many operators in combinatorics. Here are two examples. 
+<h3>Appendix: Advance Examples</h3>
 
-<h4>Schur operators</h4>
+<p>In the last section, I give a number of advanced examples requiring more knowledge of Python. 
+  </p>
+
+<h4>Example: Schur operators</h4>
 <p>For a partition \(\lambda\), we define \(u_i\) the operator 
 \[u_i\lambda = \begin{cases}
 \lambda\cup\text{a box in the $i$-th row},& \text{if it is a partition},\\
@@ -246,7 +311,8 @@ print(Schur_op(1,2,1,0)(B(2,2,1)+B(4,3,3)))
 </script>
 </div>
 
-<h4>Dunkl elements</h4>
+
+<h4>Example: Dunkl elements</h4>
 <p>For fixed \(n\), the Chevalley formula gives 
 \[x_k\mathfrak{S}_w = 
 	-\sum_{\begin{subarray}{c}i&lt;k\\\ell(wt_{ik})=\ell(w)+1\end{subarray}}\mathfrak{S}_{wt_{ik}}
@@ -318,11 +384,7 @@ Mult(x[1]*x[2])()
 </div>
 
 
-<h3>Generating combinatorial objects
-</h3>
-One advantage of Python is the generator, which provides a powerful tool to generate objects. Here we give two examples in combinatorics. 
-
-<h4>Multi-sets</h4>
+<h4>Example: Multi-sets</h4>
 <p>A multi-set with alphabet \(L\) of cardinality \(k\) is an \(S_k\)-orbit of \(L^k\).
 When \(L\) is ordered, we can uniquely write such multi-set by \(\{\!\{i_1\leq \cdots\leq i_k\}\!\}\) with all \(i_j\in L\).
 </p>
@@ -351,7 +413,7 @@ for A in Msets([1,2,3],4):
 
 
 
-<h4>Standard Young Tableaux</h4>
+<h4>Example: Standard Young Tableaux</h4>
 
 <p>Let \(\lambda\) be a partition. A standard Young tableau (SYT) of \(\lambda\) is a filling of its Young diagram with \(\{1,\cdots,n\}\) for \(n\) the number of boxes in  \(\lambda\) such that 
 (1) all numbers are used (exactly once),
