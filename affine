@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Reading Group — Affine Weyl Groups 2024</title>
+</head>
+<body>
+<h2>Reading Group — Affine Weyl Groups 2024 2022</h2>
+
+<a href="/doc/affineNotes.pdf">Notes</a>
+
+<p>
+This is the resource page for the reading group ``Affine Weyl Groups''. 
+</p>
+
+<h3>Introduction</h3>
+<p>
+The main purpose is to understand my paper joint with <a href="https://math.scu.edu.cn/info/1013/4291.htm">
+    Neil J.Y. Fan</a>, <a href="http://cfc.nankai.edu.cn/gl/main.htm">
+    Peter L. Guo</a> and <a href="https://changjiansu.github.io/">
+    Changjian Su</a> on affine Weyl groups (underwriting). 
+</p>
+
+<h3>Plan</h3>
+<ol>
+<li>Review of finite theory</li>
+<li>Two realizations</li>
+<li>Length formula</li>
+<li>Extended affine Weyl group</li>
+<li>Combinatorics in type A</li>
+</ol>
+
+
+<hr>
+
+<!--
+<a href="#" onclick="javascript:history.back(-1);">&lt;</a>
+-->
+<a href="/">home</a>
+
