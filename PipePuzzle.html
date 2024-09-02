@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Pipe Puzzles</title>
+	
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles","fullScreen"], 
+          evalButtonText: 'Evaluate'});
+</script>
+<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>
+   <script type="text/javascript">
+      MathJax = {
+         tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true  
+         },
+         svg: {
+            fontCache: 'global'
+         }
+      };
+   </script>
+<style>
+    @font-face {
+        font-family: 'mononoki';
+        src: url('mononoki-Regular.otf') format('opentype'),
+            url('mononoki-Regular.ttf') format('truetype');
+    }
+    * {font-family: 'mononoki', monospace !important;}
+    h1 {font-family: system-ui !important;}
+    h2 {font-family: system-ui !important;}
+    h3 {font-family: system-ui !important;}
+    a {font-family: system-ui !important;}
+</style>
+</head>
+<body>
+<h2>Pipe Puzzle</h2>
+
+<div id="Activate" visibility: hidden>
+  <script type="text/x-sage">
+def my_fun(x): 
+	print(x)
+print("done")
+# put your code
+  </script>
+</div>
+
+
+<h3>Proof of theorems 4.3 and 4.5</h3>
+<p>
+Note: better run the following codes offline.   
+  </p>
+
+<div class="compute">
+  <script type="text/x-sage">
+Qbeta.<beta> = PolynomialRing(QQ); ominus = lambda x,y: (x-y)/(1+beta*y);
+Pol = PolynomialRing(Qbeta,["x","y"]);  x, y = Pol.gens()
+
+def R(N, E, W, S, var = x): # Table 1 and 2
+    if N == E == W == S == 0: return var
+    if E == W == 0 < N == S: return 1
+    if N == S == 0 < E == W: return 1
+    if 0 < E == W < N == S: return 1
+    if E == S == 0 < N == W <= k: return 1+beta*var
+    if E == S == 0 and k < N == W: return 1
+    if N == W == 0 < E == S <= k: return 1
+    if N == W == 0 and k < E == S: return 1+beta*var
+    if 0 < E == S < N == W <= k: return beta
+    if k < E == S < N == W: return beta
+    if 0 < N == W <= k < E == S: return beta*(1+beta*var)
+    return 0
+def R_row(NE,NW,SE,SW, var = x): # Table 3
+    if NE == NW == SE == SW: return 1 # case A
+    if NE == NW and SE == SW: # case B
+        if (0 == SE and NE <= k) or (0 == NE and k < SE) or (0 < NE < SE): return 1 # case B1
+        if (0 == NE and SE <= k) or (0 == SE and k < NE) or (0 < SE < NE): return 1+beta*var # case B2
+    if (NE == SW == 0 < NW == SE) or (0 < NW == SE < NE == SW): return var # case C
+    return 0
+def R_col(NE,NW,SE,SW, var = x): # Table 4
+    if NE == NW == SE == SW: return 1 # case A
+    if NE == SE and NW == SW: # case B
+        if (0 == NE and NW <= k) or (0 == NW and k < NE) or (0 < NW < NE): return 1 # case B1
+        if (0 == NW and NE <= k) or (0 == NE and k < NW) or (0 < NE < NW): return 1+beta*var # case B2
+    if (NE == SW == 0 < NW == SE) or (0 < NE == SW < NW == SE): return var # case C
+    return 0
+
+def Check_row_YBE(Alph): # check thm 4.3
+    Tri = [(i,j,k) for i in Alph for j in Alph for k in Alph]
+    for (a1,a2,a3) in Tri: 
+        for (b1,b2,b3) in Tri: 
+            LHS = sum(R(a1,a2,p,q,x)*R(q,a3,r,b3,y)*R_row(p,b1,r,b2,ominus(x,y)) for (p,q,r) in Tri)
+            RHS = sum(R(a1,p,b1,q,y)*R(q,r,b2,b3,x)*R_row(a2,p,a3,r,ominus(x,y)) for (p,q,r) in Tri)
+            if LHS!= RHS: return False
+    return True
+def Check_col_YBE(Alph):  # check thm 4.5
+    Tri = [(i,j,k) for i in Alph for j in Alph for k in Alph]
+    for (a1,a2,a3) in Tri: 
+        for (b1,b2,b3) in Tri: 
+            LHS = sum(R(p,r,b1,b2,x)*R(q,a3,r,b3,y)*R_col(a2,a1,q,p,ominus(x,y)) for (p,q,r) in Tri)
+            RHS = sum(R(a1,r,b1,p,y)*R(a2,a3,r,q,x)*R_col(q,p,b3,b2,ominus(x,y)) for (p,q,r) in Tri)
+            if LHS!= RHS: return False
+    return True
+k = 3; 
+for A in Subsets([0..6],3):
+    print(A,Check_row_YBE(A),Check_col_YBE(A))
+</script>
+ </div>
+
+<h3>Generators</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+my_fun(x+"!")
+  </script>
+</div>
+    
+<h3>Computation</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+Permutations(7).random_element()
+  </script>
+</div>
+
+
+<hr>
+<a href="/">home</a>
+</body>
+</html>
