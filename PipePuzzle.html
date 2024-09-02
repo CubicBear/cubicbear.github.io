@@ -55,10 +55,152 @@
 
 <div id="Activate" visibility: hidden>
   <script type="text/x-sage">
-def my_fun(x): 
-	print(x)
-print("done")
-# put your code
+
+def block(u,r,option=[True,True,0]): # yield (l,d,(u,r,l,d))
+    kth,eq,k = option
+    if u == r == 0:
+        if eq: yield (0,0,(u,r,0,0))
+        return
+    if 0 == u < r:
+        yield (r,u,(u,r,r,u))
+        yield (u,r,(u,r,u,r))
+        return
+    if 0 == r < u:
+        yield (u,r,(u,r,u,r))
+        yield (r,u,(u,r,r,u))
+        return
+    if 0 < r and 0 < u:
+        if r<u: yield (r,u,(u,r,r,u))
+        if r<u<=k or k<r<u or u<=k<r: 
+            if kth: yield (u,r,(u,r,u,r))
+        return
+        
+def row_free(uu,r,option=[True,True]): # yield (l,dd,tiles=[...])
+    if len(uu)==0: 
+        yield (r,[],[])
+        return
+    for (l_old,dd_old,tiles_old) in row_free(uu[1:],r,option):
+        for (l,d,tile) in block(uu[0],l_old,option):
+            yield (l,[d]+dd_old,[tile]+tiles_old)
+    return 
+def row(uu,r,option=[True,True]):
+    for (l,dd,tiles) in row_free(uu,r,option):
+        if l == 0: yield (l,dd,tiles)
+    
+def col(uu,rr,option=[True,True]): # yiled (ll,dd,tiless=[tiless])
+    if len(rr)==0:
+        yield ([],uu,[])
+        return 
+    for (ll_old,dd_old,tiless_old) in col(uu,rr[:-1],option):
+        for (l,dd,tiles) in row(dd_old,rr[-1],option): 
+            yield (ll_old+[l],dd,tiless_old+[tiles])
+    return
+Alph = [str(i) for i in range(10)]+[chr(65+i) for i in range(26)]
+Alph_row = Alph[:]; Alph_row[0]="-"
+Alph_col = Alph[:]; Alph_col[0]="┆"
+Alph_b = Alph[:]; Alph_b[0]=" "
+Alph_l = Alph[:]; Alph_l[0]=" "
+Alph_r = Alph[:]; Alph_r[0]=" "
+
+def PP_print(tiless): 
+    res = ""
+    n = len(tiless) # height
+    m = len(tiless[0]) # width
+    res += "+-"+"-+-".join([Alph_row[tile[0]] for tile in tiless[0]])+"-+\n"
+    for i in range(n):
+        res+=Alph_col[0]
+        tiles = tiless[i]
+        for j in range(m): 
+            u,r,l,d = tiles[j]
+            if u==r==l==d==0:
+                res+="   "
+            elif u==d==0 and l==r:
+                res+="═══"
+            elif l==r==0 and u==d:
+                res+=" ║ "
+            elif u==l==0 and d==r:
+                res+=" ╔═"
+            elif d==r==0 and u==l:
+                res+="═╝ "
+            elif d==u and r==l:
+                res+="═╬═"
+            elif d==r and l==u:
+                res+="═╝╔"
+            else:
+                res+=" ? "
+            res+=Alph_col[r]
+#             res += 
+        res+="\n"
+        res += "+-"+"-+-".join([Alph_row[tile[-1]] for tile in tiles])+"-+\n"
+    return res
+
+
+def PP_print_brief(tiless): 
+    res = ""
+    n = len(tiless) # height
+    m = len(tiless[0]) # width
+    res += " "+" ".join([Alph_b[tile[0]] for tile in tiless[0]])+" \n"
+    for i in range(n):
+        tiles = tiless[i]
+        res+=" "
+        for j in range(m): 
+            u,r,l,d = tiles[j]
+            if u==r==l==d==0:
+                res += "  "
+            elif u==d==0 and l==r:
+                res += "══"
+            elif l==r==0 and u==d:
+                res += "║ "
+            elif u==l==0 and d==r:
+                res += "╔═"
+            elif d==r==0 and u==l:
+                res += "╝ "
+            elif d==u and r==l:
+                res += "╬═"
+            elif d==r and l==u:
+                res += "╝═"
+            else:
+                res = res[:-1]+"? "
+        res+=Alph_b[r]+"\n"
+    res += " "+" ".join([Alph_row[tile[-1]] for tile in tiles])+" "
+    return res
+
+
+
+class PipePuzzle(list):
+    def __repr__(self):
+        return PP_print(self)
+#         return PP_print_brief(self)
+        
+    
+def PP(uu,rr, model="triple",kth=True,sort=False,k=None):
+    if k == None: k = max(rr)
+    if sort==False:
+        if model == "triple": 
+            for XXX in col(uu,rr,[kth,True,k]):
+                XX = PipePuzzle(XXX[-1]); XX.dd = XXX[1]; XX.model = "triple"
+                yield XX
+        elif model == "single":
+            for XXX in col(uu,rr,[kth,False,k]):
+                XX = PipePuzzle(XXX[-1]); XX.dd = XXX[1]; XX.model = "single"
+                yield XX
+        elif model == "double":
+            for XXX in col(uu,rr,[kth,True,k]):
+                is_double = True
+                for i in range(len(XXX[-1])):
+                    for j in [0..i]: 
+                        if XXX[-1][i][j][2] != 0: is_double=False
+                if is_double:
+                    XX = PipePuzzle(XXX[-1]); XX.dd = XXX[1]; XX.model = "double"
+                    yield XX
+            pass
+        return
+    for XX in sorted(PP(uu,rr,model,kth,False), key=lambda XX: XX.dd):
+        yield XX
+    return
+
+
+
   </script>
 </div>
 
@@ -127,15 +269,19 @@ for A in Subsets([0..6],3):
 
 <div class="compute">
   <script type="text/x-sage">
-my_fun(x+"!")
+for XX in PP([0,5,4,0,3],[0,2,0,1,0],model="double",kth=True,sort=True):
+	if XX.dd == [4,5,2,3,1]:
+	    print(XX)
   </script>
 </div>
     
-<h3>Computation</h3>
+<h3>Generators</h3>
 
 <div class="compute">
   <script type="text/x-sage">
-Permutations(7).random_element()
+for XX in PP([0,0,0,0,0],[4,2,1,5,3],model="triple",kth=True,sort=False):
+    if XX.dd == [1,2,3,4,5]:
+	    print(XX)
   </script>
 </div>
 
