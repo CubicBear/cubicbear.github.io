@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Deadhar Diagrams and Trees</title>
+	
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles","fullScreen"], 
+          evalButtonText: 'Evaluate'});
+</script>
+<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>
+   <script type="text/javascript">
+      MathJax = {
+         tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true  
+         },
+         svg: {
+            fontCache: 'global'
+         }
+      };
+   </script>
+<style>
+    @font-face {
+        font-family: 'mononoki';
+        src: url('mononoki-Regular.otf') format('opentype'),
+            url('mononoki-Regular.ttf') format('truetype');
+    }
+    * {font-family: 'mononoki', monospace !important;}
+    h1 {font-family: system-ui !important;}
+    h2 {font-family: system-ui !important;}
+    h3 {font-family: system-ui !important;}
+    a {font-family: system-ui !important;}
+</style>
+</head>
+<body>
+<h2>Deodhar Diagrams and Trees</h2>
+
+<div id="Activate" visibility: hidden>
+  <script type="text/x-sage">
+def block(u,l,allow_bump=True): # output ( (cross?,u,d,l,r) ,d,r)
+    yield ((True,u,u,l,l),u,l)
+    if allow_bump and u>l: 
+        yield ((False,u,l,l,u),l,u)
+    return
+#   u
+# l   ?
+#   ?
+
+def row(uu,l,r=None, max_bump=None): # output (tiles,[d0,d1,..],r,Num_of_bump)
+    if len(uu) == 0: 
+        yield ([],uu,l,0)
+        return
+#     print(uu[:-1])
+    for (tiles_old,dd_old,r_old,N) in row(uu[:-1],l,None,max_bump):
+        
+        # --------------- bump ---------------
+        if max_bump ==None or max_bump>N:
+            allow_bump = True
+        else: 
+            allow_bump = False
+        # --------------- bump ---------------
+        
+        for (tile_new,d_new,r_new) in block(uu[-1],r_old,allow_bump):
+            if r==None or r==r_new:  
+                
+                # --------------- bump ---------------
+                if tile_new[0]==False: N=N+1
+                # --------------- bump ---------------
+                yield ( tiles_old+[tile_new], dd_old+[d_new], r_new, N)
+    return 
+
+#   uu[:-1]       uu[-1]
+# l         r_old        r_new
+#   dd_old        d_new
+
+def col(uu,ll,dd=None,rr=None, max_bump=None): # output ([tiles,..], dd,rr,Num_of_bump)
+    if dd==None:
+        dd = [None]*len(uu)
+    if rr==None: 
+        rr = [None]*len(ll)
+    if len(ll) == 0:
+        yield ([],uu,ll,0)
+        return
+    for (tiless_old,dd_old,rr_old,N_old) in col(uu,ll[:-1],None,rr[:-1],max_bump):
+        # --------------- bump ---------------
+        if max_bump == None :
+            new_max_bump = None
+        else: 
+            new_max_bump = max_bump-N_old
+        # --------------- bump ---------------
+        
+        for (tiles_new,dd_new,r_new,N_new) in row(dd_old,ll[-1],rr[-1],new_max_bump):
+            if all(dd[i]==None or dd[i]==dd_new[i] for i in range(len(dd_new))): 
+                yield ( tiless_old+[tiles_new], dd_new, rr_old+[r_new], N_old+N_new)
+    return
+
+def DeodDiag(a,b):
+    ll = list(reversed([1..a]))
+    uu = [a+1..a+b]
+    dd = [1..b]
+    rr = list(reversed([b+1..a+b]))
+    for X in col(uu,ll,dd,rr,a+b-1):
+        yield Deodhar(X[0])
+                
+Alph = [str(i) for i in range(10)]+[chr(65+i) for i in range(26)]
+
+def Deo_print(tiless):
+    res = ""
+    ht = len(tiless)
+    wd = len(tiless[0])
+    res += "+ " + " + ".join(Alph[xudlr[1]] for xudlr in tiless[0]) + " +\n"
+    for i in range(ht):
+        tile = tiless[i]
+        res += Alph[tile[0][3]]
+        for j in range(wd):
+            if tile[j][0]:
+                res += "─┼─"
+            else:
+                res += "╮╰─"
+            res += Alph[tile[j][4]]
+        res+="\n"
+        res += "+ " + " + ".join(Alph[xudlr[2]] for xudlr in tile) + " +\n"
+    return res
+
+def asso_graph(X):
+    res = []
+    for row in X:
+        for xudlr in row: 
+            if xudlr[0]==False:
+                res+= [(Alph[xudlr[3]],Alph[xudlr[1]])]
+    return Graph(res)
+
+class Deodhar(list):
+    def __repr__(self):
+        return Deo_print(self)
+    def graph(self):
+        return asso_graph(self)
+  </script>
+</div>
+
+
+<h3>Computation</h3>
+
+
+<div class="compute">
+  <script type="text/x-sage">
+N = 0
+a = 4; b = 5
+for X in DeodDiag(a,b):
+    X.graph().show(layout='tree',figsize=(2, 2))
+    print(X)
+    N+=1
+print(N==binomial(a+b,b)/(a+b))
+  </script>
+ </div>
+
+
+<hr>
+<a href="/">home</a>
+</body>
+</html>
