@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Theta function Checker</title>
+	
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles","fullScreen"], 
+          evalButtonText: 'Evaluate'});
+</script>
+<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>
+   <script type="text/javascript">
+      MathJax = {
+         tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true  
+         },
+         svg: {
+            fontCache: 'global'
+         }
+      };
+   </script>
+<style>
+</style>
+</head>
+<body>
+<h2>Theta function Checker</h2>
+
+We use the following Jacobi theta function
+\[\mathtt{theta}(u) = \theta(u) = (x^{1/2}-x^{-1/2})\prod_{n>0}(1-q^nx)(1-q^n/x),\qquad x=e^{2\pi i u}\]
+We defined
+\[\mathtt{delta}(a,b) =\frac{\theta(a+b)}{\theta(a)\theta(b)},\qquad 
+  \mathtt{four}(x,y,z,w) =\frac{\theta(x)\theta(y)}{\theta(z)\theta(w)}.\]
+The checker will expand \(\theta(u)\) in terms of \(x^{1/2}\) modulo \(q^5\).
+
+<div id="Activate" visibility: hidden>
+  <script type="text/x-sage">
+my_prec = 4
+
+class MyFracEle(sage.rings.fraction_field_element.FractionFieldElement): 
+    def trunc(self,f,base=None,prec=my_prec):
+        if base == None: base = self.parent().base()
+        R = base 
+        my_dict = R(f).dict()
+        return R({alpha: my_dict[alpha] for alpha in my_dict if alpha<=prec})
+    def __init__(self,parent,num,den=1,coerce=True, reduce=True):
+        num = self.trunc(num,parent.base())
+        den = self.trunc(den,parent.base())
+        super().__init__(parent,num,den,coerce,reduce) 
+    def __eq__(self,other):
+        if other in self.parent():
+            other = self.parent()(other)
+            a = self.trunc(self.numerator()*other.denominator())
+            b = self.trunc(other.numerator()*self.denominator())
+            return a == b
+        return False
+    def __call__(self,*x):
+        R = Frac(x[0].parent())
+        Rq = PolynomialRing(R,"q"); q = Rq.gen() 
+        
+        num_dict = self.parent().base()(self.numerator()).dict()
+        den_dict = self.parent().base()(self.denominator()).dict()
+        num = Rq({alpha:num_dict[alpha](*x) for alpha in num_dict})
+        den = Rq({alpha:den_dict[alpha](*x) for alpha in den_dict})
+        return MyFracEle(Frac(Rq),num,den)
+        
+        
+def ToMyFrac(f,parent=None):
+    if parent == None: parent = f.parent()
+    R = parent; f = R(f)
+    try: 
+        return MyFracEle(R,f.numerator(),f.denominator())
+    except:
+        R = Frac(parent); f = R(f)
+        return MyFracEle(R,f.numerator(),f.denominator())
+from sage.rings.polynomial.polydict import ETuple
+def additive(x): # turn a linear form to a monomial
+    if x == 0: return 1
+    R = x.parent(); gens = R.gens();  n = len(gens)
+    my_dict = x.dict(); res = 1
+    for i in range(n):
+        ei = [0]*n; ei[i] = 1; ei = ETuple(ei)
+        if ei in my_dict.keys(): res*=gens[i]^(my_dict[ei])
+    return res
+vartheta = [None]
+def theta(x):
+    if vartheta[0] == None:
+        Poly_rec = PolynomialRing(QQ, ["xrec"]); xrec = Poly_rec.gen()
+        Poly_rec = PolynomialRing(Frac(Poly_rec),"q"); q=Poly_rec.gen()
+        res = ToMyFrac(xrec-xrec^(-1),Poly_rec)
+        for i in [1..my_prec]:
+            res = res * (1- q^i*xrec^2)*(1-q^i*xrec^(-2))  
+        vartheta[0] = res
+    return vartheta[0](additive(x))
+def four(x,y,z,w): return theta(x)*theta(y)/(theta(z)*theta(w))
+def delta(x,y): return theta(x+y)/(theta(x)*theta(y))
+  </script>
+</div>
+
+
+<h3>Weierstrass three-term identity</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+R = PolynomialRing(QQ, ["a","b","c","d"]); a,b,c,d=R.gens(); 
+theta(a+c)*theta(a-c)*theta(b+d)*theta(b-d) == theta(a+b)*theta(a-b)*theta(c+d)*theta(c-d) + theta(a+d)*theta(a-d)*theta(b+c)*theta(b-c)
+  </script>
+ </div>
+
+<h3>Example</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+R = PolynomialRing(QQ, ["z","λ","h"]); z,la,h = R.gens()
+def P(x,y): return four(x-y,h,y+h,x)
+def Q(x,y): return four(x+h,y,y+h,x)
+
+matrix([[1,0],[P(z,la),-Q(z,la)]]) * matrix([[1,0],[-P(la,z),-Q(la,z)]]),\
+matrix([[1,0],[P(-h,la),Q(-h,la)]])
+  </script>
+</div>
+<br>
+<div class="compute">
+  <script type="text/x-sage">
+# moving delta_i to left, replacing la --> -la 
+delta(z,-la)/delta(la,h) == four(z-la,h,z,-la-h) == - P(z,la),\
+-delta(z,h)/delta(la,h) == -four(z+h,-la,z,-la-h) == - Q(z,la)
+  </script>
+</div>
+  
+  
+<h3>\(R\)-matrices</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+n = 4
+R = PolynomialRing(QQ, ["h"]+["z"+str(i) for i in range(n)]+["λ"+str(i) for i in range(n)]);
+Rgens = list(R.gens()); h = Rgens[0]; z = Rgens[1:n+1];la = Rgens[n+1:]
+def R(i,varx):
+    def my_fun(f):
+        if type(f)==tuple: f={f:1}
+        res = {}
+        for alpha in f: 
+            my_la = [la[i] for i in alpha]
+            for j in range(len(alpha)):
+                my_la[j]+= len([j for jj in [0..j-1] if alpha[jj]==alpha[j]])*h
+            if True:
+                newalpha = list(alpha[:]); newalpha[i-1],newalpha[i] = alpha[i],alpha[i-1]; newalpha = tuple(newalpha)
+                if alpha not in res.keys(): res[alpha]=0
+                res[alpha]+= P(my_la[i-1]-my_la[i],varx)*f[alpha]
+                if newalpha not in res.keys(): res[newalpha]=0
+                res[newalpha]+= Q(my_la[i-1]-my_la[i],varx)*f[alpha]
+        return res
+    return my_fun
+
+for alpha in [(1,1,1),(1,1,2),(1,2,1),(2,1,1),(1,2,3)]:
+    LHS = R(1,z[2])( R(2,z[1]+z[2])( R(1,z[1])( alpha ) ) )
+    RHS = R(2,z[1])( R(1,z[1]+z[2])( R(2,z[2])( alpha ) ) )
+    print(LHS==RHS)
+  </script>
+</div>
+
+  
+<h3>Test</h3>
+<div class="compute">
+  <script type="text/x-sage">
+n = 4
+R = PolynomialRing(QQ, ["h"]+["z"+str(i) for i in range(n)]+["λ"+str(i) for i in range(n)]);
+Rgens = list(R.gens()); h = Rgens[0]; z = Rgens[1:n+1];la = Rgens[n+1:]
+# your identity
+  </script>
+</div>
+  
+<hr>
+<a href="/">home</a>
+</body>
+</html>
