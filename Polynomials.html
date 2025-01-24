@@ -67,14 +67,14 @@ print("done")
 
 <div class="compute">
   <script type="text/x-sage">
-W = WeylGroup("A2", prefix="s"); s = W.simple_reflections()
-W_list = sorted(list(W),key = lambda w: (w.length(),w.reduced_word()))
-w0 = W.long_element()
-
+W = WeylGroup("A2", prefix="s"); 
+s = W.simple_reflections()
 K.<q> = LaurentPolynomialRing(ZZ);
 KL = KazhdanLusztigPolynomial(W, q);
 
 Poly = KL.R; # Poly = KL.P; # Poly = KL.R_tilde
+
+W_list = sorted(list(W),key = lambda w: (w.length(),w.reduced_word())); w0 = W.long_element()
 Polytable = table([[ Poly(u,w) for u in W_list] for w in W_list],
              header_row=W_list,
              header_column=["Polynomials"]+W_list,
