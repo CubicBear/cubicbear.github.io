@@ -236,7 +236,7 @@ def presuw_report(u,w,k=None):
         res+= tile_w[0].center(10)+":"
     num_O = len([0 for xx in types if xx == "O"])
     if num_O<=1:
-        mark+= 2*len(set(types)) - 2*n*num_O + len(cols[0])/2 
+        mark+= 2*len(set(types)) - 2*n*num_O + len(cols[0])/2 - len([0 for xx in cols if xx == []])
     else: 
         mark=0
     return (res,mark)
