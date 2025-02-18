@@ -120,9 +120,9 @@ def presuw_report(u,w,k=None):
     
     
     
-#     print("+".join("-"+Alph(a)+"-" for a in upp) )
+#     print("+".join("-"+str(a)+"-" for a in upp) )
 #     print(":".join(" "+piecetype(upp[i-1],low[i-1])+" " for i in [1..n]) )
-#     print("+".join("-"+Alph(a)+"-" for a in low) )
+#     print("+".join("-"+str(a)+"-" for a in low) )
                 
     cols = [[] for i in [1..n+1]]
     # cols[i] = between i and i+1
@@ -151,7 +151,7 @@ def presuw_report(u,w,k=None):
     for ap in [1..k]:
         a = k + 1 - ap
 #         print(a,u(a),w(a))
-        res+= Alph(a)+(">" if a in cols[0] else ":")
+        res+= str(a)+(">" if a in cols[0] else ":")
         for i in [1..n]: 
             if i == u(a)==w(a):
                 res+=    "   ╭─>╮   "
@@ -191,7 +191,7 @@ def presuw_report(u,w,k=None):
     for bp in [1..n-k]:
         b = n + 1 - bp
     
-        res+= Alph(b)+("<" if b in cols[0] else ":")
+        res+= str(b)+("<" if b in cols[0] else ":")
         for i in [1..n]: 
             if i == u(b)==w(b):
                 res+=    "   └<─┘   "
@@ -236,10 +236,10 @@ def presuw_report(u,w,k=None):
         res+= tile_w[0].center(10)+":"
     num_O = len([0 for xx in types if xx == "O"])
     if num_O<=1:
-        mark+= 2*len(set(types)) - 2*n*num_O + len(cols[0])/2 - len([0 for xx in cols if xx == []])
+        mark+= 2*len(set(types)) - 2*n*num_O + len(cols[0])/2 
     else: 
         mark=0
-    return (res,mark)
+    return (res,mark,num_O,len(cols[0]))
 
 def presuw(u,w,k=None):
     return presuw_report(u,w,k)[0]
@@ -398,13 +398,27 @@ def random_gen(n,k=None,u=None):
     while mark<2*n or N+mark<3*n: 
         w = Permutations(n).random_element();
         w = list(w)
-        to_print0,mark0 = presuw_report(u,w,k)
+        to_print0, mark0, num_O, q_num = presuw_report(u,w,k)
         if mark0>mark:
             to_print = to_print0
             mark = mark0
             w_res = w
         N+=1
     return (to_print+" mark = %s"%mark,u,w_res)
+
+def expansion(u,k):
+    u = list(u); n = len(u)
+    Sn = Permutations(n); 
+    for w in Sn: 
+        w = list(w)
+        to_print0, mark0, num_O, q_num = presuw_report(u,w,k)
+        if num_O == 0 and q_num == 0: 
+            yield w
+
+# res,u,w = random_gen(7,2)
+# print(presuw(u,w)) # print(latexuw(u,w))
+
+# print(presuw([2,6,4,3,5,1],[6,3,2,5,4,1]))
   </script>
 </div>
 
@@ -439,6 +453,15 @@ print(presuw([2,6,4,3,5,1],[6,3,2,5,4,1]))
   </script>
 </div>
     
+<h3>Computation</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+u = Permutations(6).random_element(); 
+for w in expansion(u,3): 
+    print(presuw(u,w))
+  </script>
+</div>
 
 
 <hr>
