@@ -120,9 +120,9 @@ def presuw_report(u,w,k=None):
     
     
     
-#     print("+".join("-"+str(a)+"-" for a in upp) )
+#     print("+".join("-"+Alph(a)+"-" for a in upp) )
 #     print(":".join(" "+piecetype(upp[i-1],low[i-1])+" " for i in [1..n]) )
-#     print("+".join("-"+str(a)+"-" for a in low) )
+#     print("+".join("-"+Alph(a)+"-" for a in low) )
                 
     cols = [[] for i in [1..n+1]]
     # cols[i] = between i and i+1
@@ -151,7 +151,7 @@ def presuw_report(u,w,k=None):
     for ap in [1..k]:
         a = k + 1 - ap
 #         print(a,u(a),w(a))
-        res+= str(a)+(">" if a in cols[0] else ":")
+        res+= Alph(a)+(">" if a in cols[0] else ":")
         for i in [1..n]: 
             if i == u(a)==w(a):
                 res+=    "   ╭─>╮   "
@@ -191,7 +191,7 @@ def presuw_report(u,w,k=None):
     for bp in [1..n-k]:
         b = n + 1 - bp
     
-        res+= str(b)+("<" if b in cols[0] else ":")
+        res+= Alph(b)+("<" if b in cols[0] else ":")
         for i in [1..n]: 
             if i == u(b)==w(b):
                 res+=    "   └<─┘   "
