@@ -1,0 +1,447 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Sample of SageCell</title>
+	
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles","fullScreen"], 
+          evalButtonText: 'Evaluate'});
+</script>
+<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>
+   <script type="text/javascript">
+      MathJax = {
+         tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true  
+         },
+         svg: {
+            fontCache: 'global'
+         }
+      };
+   </script>
+<style>
+    @font-face {
+        font-family: 'mononoki';
+        src: url('mononoki-Regular.otf') format('opentype'),
+            url('mononoki-Regular.ttf') format('truetype');
+    }
+    * {font-family: 'mononoki', monospace !important;}
+    h1 {font-family: system-ui !important;}
+    h2 {font-family: system-ui !important;}
+    h3 {font-family: system-ui !important;}
+    a {font-family: system-ui !important;}
+</style>
+</head>
+<body>
+<h2>Pieri Rule for Grothendieck polynomials</h2>
+
+<div id="Activate" visibility: hidden>
+  <script type="text/x-sage">
+def block_weight_print(u,d,l,r,i,k,n): 
+    l = list(l); r = list(r)
+    if len([a for a in l if a<=k]) != len([b for b in l if b>k]) : return ( "0", "O", 0)
+    if len([a for a in r if a<=k]) != len([b for b in r if b>k]) : return ( "0", "O", 0)
+    if u == d <= k: # Piece A
+        if l==r and all(x>=d for x in l):
+            return ( "y+t"+str(i) , "A",1)
+        return ( "0", "O",0)
+    if u == d > k: # Piece B
+        if l == r and all(x<=u for x in l):
+            return ( "1", "B",1)
+        return ("0", "O", 0)
+    if u <= k < d: # Piece C
+        if u in l and d in l and all(x<=d for x in r):
+            m = len([x for x in r if x<u])
+            if m == 0: return ("1", "C",1)
+            if m == 1: return ("β", "C",2)
+            return ("β^"+str(m), "C",m+1)
+        return ("0", "O",0)
+    if d <= k < u: # Piece D
+        if u in r and d in r and all(x>=d for x in l):
+            m = len([x for x in l if x>u])
+            if m == 0: return ("1+βt"+str(i) ,"D",1)
+            if m == 1: return ("β(1+βt"+str(i)+")","D",2)
+            return ( "β^"+str(m)+"(1+βt"+str(i)+")", "D",m+1)
+        return ("0", "O",0)
+    if u < d <= k: # Piece E
+        if u in l and d in r and all(x>=d for x in r):
+            return ("1-βy","E",1)
+        return("0", "O",0)
+    if d < u <= k: # Piece F
+        if u in l and d in r and all(x>=d for x in r):
+            m = len([x for x in l if x<u])
+            if m == 0: return ("1+βt"+str(i),       "F",1)
+            if m == 1: return ("β(1+βt"+str(i)+")", "F",2)
+            return ( "β^"+str(m)+"(1+βt"+str(i)+")", "F",m+1)
+        return ("0", "O",0)
+    if k < u < d: # Piece G
+        if u in r and d in l and all(x<=d for x in r):
+            m = len([x for x in l if x>u])
+            if m == 0: return ("1", "G",0)
+            if m == 1: return ("β", "G",1)
+            return ("β^"+str(m), "G",m+1)
+        return ("0", "O",0)
+    return ("0", "O",0)
+
+def presuw_report(u,w,k=None):
+    def Alph(i):
+        if i <=9: return str(i)
+        return chr(97+i-10)
+    def alph(i):
+        if i<=k: return Alph(i)
+        else: return Alph(i)
+    n = len(u)
+    if k == None: k = round(n/2)
+    Sn = Permutations(n); s = Sn.simple_reflections()
+    
+    u = (Sn(u))^(-1)
+    w = (Sn(w))^(-1)
+        
+    low = [(u^(-1))(i) for i in [1..n]]
+    upp = [(w^(-1))(i) for i in [1..n]]
+    
+    
+    
+#     print("+".join("-"+str(a)+"-" for a in upp) )
+#     print(":".join(" "+piecetype(upp[i-1],low[i-1])+" " for i in [1..n]) )
+#     print("+".join("-"+str(a)+"-" for a in low) )
+                
+    cols = [[] for i in [1..n+1]]
+    # cols[i] = between i and i+1
+    for i in [1..n]: 
+        if i<=k and u(i)<=w(i):
+            for j in [u(i)..w(i)-1]: 
+                cols[j]+=[i]
+        elif i<=k and u(i)>w(i):
+            for j in [0..w(i)-1]: 
+                cols[j]+=[i]
+            for j in [u(i)..n]: 
+                cols[j]+=[i]
+        elif i>k and u(i)>=w(i):
+            for j in [w(i)..u(i)-1]: 
+                cols[j]+=[i]
+        elif i>k and u(i)<w(i):
+            for j in [0..u(i)-1]: 
+                cols[j]+=[i]
+            for j in [w(i)..n]: 
+                cols[j]+=[i]
+#     print(cols)
+    res = ""
+    
+    res+=" "+(":"+"-"*10)*n+":\n"
+    
+    for ap in [1..k]:
+        a = k + 1 - ap
+#         print(a,u(a),w(a))
+        res+= str(a)+(">" if a in cols[0] else ":")
+        for i in [1..n]: 
+            if i == u(a)==w(a):
+                res+=    "   ╭─>╮   "
+            elif u(a)==i:
+                if a<(w^(-1))(i)<=k:
+                    res+="   │  ╭───"
+                else:
+                    res+="      ╭───"
+            elif i==w(a):
+                if a<(u^(-1))(i)<=k:
+                    res+="───╮  │   "
+                else:
+                    res+="───╮      "
+            elif a in cols[i-1] and a in cols[i]: #u(a)< i< w(a):
+                if a<(w^(-1))(i)<=k and a<(u^(-1))(i)<=k:
+                    res+="───┼──┼───"
+                elif a<(w^(-1))(i)<=k:
+                    res+="───┼──────"
+                elif a<(u^(-1))(i)<=k:
+                    res+="──────┼───"
+                else: 
+                    res+="──────────"
+            else:
+                if a<(w^(-1))(i)<=k and a<(u^(-1))(i)<=k:
+                    res+="   │  │   "
+                elif a<(w^(-1))(i)<=k:
+                    res+="   │      "
+                elif a<(u^(-1))(i)<=k:
+                    res+="      │   "
+                else: 
+                    res+="          "
+            res+= (">" if a in cols[i] else ":")
+        res+="\n"
+        
+    res += " :--("+"---:--(".join(alph(upp[i-1])+")-"+alph(low[i-1]) for i in [1..n])+"---:\n"
+    
+    for bp in [1..n-k]:
+        b = n + 1 - bp
+    
+        res+= str(b)+("<" if b in cols[0] else ":")
+        for i in [1..n]: 
+            if i == u(b)==w(b):
+                res+=    "   └<─┘   "
+            elif u(b)==i!= w(b):
+                if b>(w^(-1))(i)>k:
+                    res+="───┼──┘   "
+                else:
+                    res+="──────┘   "
+            elif u(b)!= i==w(b):
+                if b>(u^(-1))(i)>k:
+                    res+="   └──┼───"
+                else:
+                    res+="   └──────"
+            elif b in cols[i-1] and b in cols[i]: #u(b)> i> w(b):
+                if b>(w^(-1))(i)>k and b>(u^(-1))(i)>k:
+                    res+="───┼──┼───"
+                elif b>(w^(-1))(i)>k:
+                    res+="───┼──────"
+                elif b>(u^(-1))(i)>k:
+                    res+="──────┼───"
+                else: 
+                    res+="──────────"
+            else:
+                if b>(w^(-1))(i)>k and b>(u^(-1))(i)>k:
+                    res+="   │  │   "
+                elif b>(w^(-1))(i)>k:
+                    res+="   │      "
+                elif b>(u^(-1))(i)>k:
+                    res+="      │   "
+                else: 
+                    res+="          "
+            res+= ("<" if b in cols[i] else ":")
+        res+="\n"
+    res+=" "+(":"+"-"*10)*n+":\n"
+    res+= " :"
+    mark = 0 
+    types = []
+    for i in [1..n]: 
+        tile_w = block_weight_print(upp[i-1],low[i-1],cols[i-1],cols[i],i,k,n)
+        types+=[tile_w[1]]
+        mark += tile_w[2]
+        res+= tile_w[0].center(10)+":"
+    num_O = len([0 for xx in types if xx == "O"])
+    if num_O<=1:
+        mark+= 2*len(set(types)) - 2*n*num_O + len(cols[0])/2 
+    else: 
+        mark=0
+    return (res,mark)
+
+def presuw(u,w,k=None):
+    return presuw_report(u,w,k)[0]
+#     return res
+# u = Sn.random_element()
+# w = Sn.random_element()
+# print(presuw([7,2,6,4,3,5,1],[6,7,3,2,5,4,1]))
+# print(presuw([3,4,2,1,6,5],[1,3,6,5,4,2]))
+
+
+
+def block_weight_latex(u,d,l,r,i,k,n): 
+    l = list(l); r = list(r)
+    if len([a for a in l if a<=k]) != len([b for b in l if b>k]) : return "0"
+    if len([a for a in r if a<=k]) != len([b for b in r if b>k]) : return "0"
+    if u == d <= k: # Piece A
+        if l==r and all(x>=d for x in l):
+            return "y+t_{"+str(i)+"}"
+        return "0"
+    if u == d > k: # Piece B
+        if l == r and all(x<=u for x in l):
+            return "1"
+        return "0"
+    if u <= k < d: # Piece C
+        if u in l and d in l and all(x<=d for x in r):
+            m = len([x for x in r if x<u])
+            if m == 0: return "1"
+            if m == 1: return "\\beta"
+            return "\\beta^{"+str(m)+"}"
+        return "0"
+    if d <= k < u: # Piece D
+        if u in r and d in r and all(x>=d for x in l):
+            m = len([x for x in l if x>u])
+            if m == 0: return "1+\\beta t_{"+str(i)+"}"
+            if m == 1: return "\\beta(1\\!\\!+\\!\\!\\beta t_{"+str(i)+"})"
+            return "\\beta^{"+str(m)+"}(1\\!\\!+\\!\\!\\beta t_{"+str(i)+"})"
+        return "0"
+    if u < d <= k: # Piece E
+        if u in l and d in r and all(x>=d for x in r):
+            return "1-\\beta y"
+        return "0"
+    if d < u <= k: # Piece F
+        if u in l and d in r and all(x>=d for x in r):
+            m = len([x for x in l if x<u])
+            if m == 0: return "1+\\beta t_{"+str(i)+"}"
+            if m == 1: return "\\beta(1\\!\\!+\\!\\!\\beta t_{"+str(i)+"})"
+            return "\\beta^{"+str(m)+"}(1\\!\\!+\\!\\!\\beta t_{"+str(i)+"})"
+        return "0"
+    if k < u < d: # Piece G
+        if u in r and d in l and all(x<=d for x in r):
+            m = len([x for x in l if x>u])
+            if m == 0: return "1"
+            if m == 1: return "\\beta"
+            return "\\beta^{"+str(m)+"}"
+        return "0"
+    return "0"
+
+
+def latexuw(u,w,k=None):
+    n = len(u)
+    if k == None: k = round(n/2)
+    Sn = Permutations(n); s = Sn.simple_reflections()
+    
+    if type(u) == list: u = (Sn(u))^(-1)
+    if type(w) == list: w = (Sn(w))^(-1)
+    low = [(u^(-1))(i) for i in [1..n]]
+    upp = [(w^(-1))(i) for i in [1..n]]
+    
+    cols = [[] for i in [1..n+1]]
+    # cols[i] = between i and i+1
+    for i in [1..n]: 
+        if i<=k and u(i)<=w(i):
+            for j in [u(i)..w(i)-1]: 
+                cols[j]+=[i]
+        elif i<=k and u(i)>w(i):
+            for j in [0..w(i)-1]: 
+                cols[j]+=[i]
+            for j in [u(i)..n]: 
+                cols[j]+=[i]
+        elif i>k and u(i)>=w(i):
+            for j in [w(i)..u(i)-1]: 
+                cols[j]+=[i]
+        elif i>k and u(i)<w(i):
+            for j in [0..u(i)-1]: 
+                cols[j]+=[i]
+            for j in [w(i)..n]: 
+                cols[j]+=[i]
+#     print(cols)
+    
+    res = "\\begin{tikzpicture}[scale=0.8]\n"
+    res += "\\draw[lightgray,ultra thick](%.1f,0) to (%.1f,0);\n"%(0.8,2*n+1.2)
+    for i in [1..n]: 
+#         my_color = ("lightgray" if i%2==0 else "gray")
+#         res+= "\\fill [%s] (%.1f,%.1f) rectangle (%.1f,%.1f);\n"%(my_color, 2*i-1,0.2+0.3*(k+1), 2*i+1, -0.2-0.3*(n-k+1))
+        my_color = ("red" if low[i-1]<=k else "blue")
+        res+= "\\node at (%.1f,%.1f){\\(\\color{%s}{%s}\\)};" %(i*2+0.3,0,my_color,low[i-1])
+        my_color = ("red" if upp[i-1]<=k else "blue")
+        res+= "\\node at (%.1f,%.1f){\\(\\color{%s}{%s}\\)};\n" %(i*2-0.3,0,my_color,upp[i-1])
+    for i in [1..n]: 
+        x1 = 2*u(i)+0.3
+        x2 = 2*w(i)-0.3
+        y1 = (0.2 if i<=k else -0.2)
+        y2 = (0.2+0.3*i if i<=k else -0.2-0.3*(n-i+1))
+        if i <=k and u(i)<w(i):
+            xxx = (x1,y1, x1,y2, x2,y2, x2,y1)
+            res+= "\\draw[red,thick,rounded corners] (%.1f,%.1f) to (%.1f,%.1f) to (%.1f,%.1f) to (%.1f,%.1f);\n" %xxx
+        if i <=k and u(i)==w(i):
+            xxx = (x1,y1, x1,y2, x2,y2, x2,y1)
+            res+= "\\draw[red,thick,rounded corners] (%.1f,%.1f) to (%.1f,%.1f) to  (%.1f,%.1f) to (%.1f,%.1f);\n" %xxx
+        if i<=k and u(i)>w(i):
+            xxx = (x1,y1, x1,y2, n*2+1.2,y2)
+            res+= "\\draw[red,thick,rounded corners] (%.1f,%.1f) to (%.1f,%.1f) to  (%.1f,%.1f);\n" %xxx
+            xxx = (0.8,y2, x2,y2, x2,y1)
+            res+= "\\draw[red,thick,rounded corners] (%.1f,%.1f) to (%.1f,%.1f) to  (%.1f,%.1f);\n" %xxx
+        
+        if i > k and u(i)>w(i):
+            xxx = (x1,y1, x1,y2, x2,y2, x2,y1)
+            res+= "\\draw[blue,thick,rounded corners] (%.1f,%.1f) to (%.1f,%.1f) to (%.1f,%.1f) to (%.1f,%.1f);\n" %xxx
+        if i > k and u(i)==w(i):
+            xxx = (x1,y1, x1,y2, x2,y2, x2,y1)
+            res+= "\\draw[blue,thick,rounded corners] (%.1f,%.1f) to (%.1f,%.1f) to (%.1f,%.1f) to (%.1f,%.1f);\n" %xxx
+        if i > k and u(i)<w(i):
+            xxx = (x1,y1, x1,y2, 0.8,y2)
+            res+= "\\draw[blue,thick,rounded corners] (%.1f,%.1f) to (%.1f,%.1f) to (%.1f,%.1f);\n" %xxx
+            xxx = (2*n+1.2,y2, x2,y2, x2,y1)
+            res+= "\\draw[blue,thick,rounded corners] (%.1f,%.1f) to (%.1f,%.1f) to (%.1f,%.1f);\n" %xxx
+    for j in range(n+1): 
+        x1 = 2*j+1
+        res+="\\draw[dashed] (%.1f,%.1f) to (%.1f,%.1f);" %(x1,-0.2-0.3*(n-k+1),  x1,0.2+0.3*(k+1))
+        for i in [1..k]:
+            if i in cols[j]:
+                y2 = 0.2+0.3*i
+                res+="\\draw[red,very thick,->] (%.1f,%.1f) to +(0.001,0);" %(x1,y2)
+        for i in [k+1..n]:
+            if i in cols[j]:
+                y2 = -0.2-0.3*(n-i+1)
+                res+="\\draw[blue,very thick,->] (%.1f,%.1f) to +(-0.001,0);" %(x1,y2)
+        res+= "\n"
+    for i in [1..n]: 
+        wei = block_weight_latex(upp[i-1],low[i-1],cols[i-1],cols[i],i,k,n)
+        res+= "\\node at (%.1f,%.1f){\\(%s\\)};\n"%(2*i,-0.2-0.3*(n-k+1)-0.5,wei)
+    res+= "\\end{tikzpicture}"
+    return res
+
+    
+# print(latexuw([2,6,4,3,5,1],[3,6,2,5,4,1]))
+# print(latexuw([3,4,2,1,6,5],[1,3,6,5,4,2]))
+
+# print(latexuw([2,6,4,3,5,1],[6,3,2,5,4,1]))
+
+def random_gen(n,k=None,u=None):
+    if u==None:
+        u = Permutations(n).random_element(); 
+    u = list(u)
+    mark = 0; N = 0
+    while mark<2*n or N+mark<3*n: 
+        w = Permutations(n).random_element();
+        w = list(w)
+        to_print0,mark0 = presuw_report(u,w,k)
+        if mark0>mark:
+            to_print = to_print0
+            mark = mark0
+            w_res = w
+        N+=1
+    return (to_print+" mark = %s"%mark,u,w_res)
+  </script>
+</div>
+
+
+<h3>Computation</h3>
+
+
+<div class="compute">
+  <script type="text/x-sage">
+res,u,w = random_gen(6)
+print(presuw(u,w)) # print(latexuw(u,w))
+
+  </script>
+ </div>
+
+<h3>Computation</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+u = [2,6,4,3,5,1]
+res,u,w = random_gen(6,3,u)
+print(presuw(u,w)) # print(latexuw(u,w))
+  </script>
+</div>
+	
+<h3>Computation</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+print(presuw([2,6,4,3,5,1],[6,3,2,5,4,1]))
+
+  </script>
+</div>
+    
+
+
+<hr>
+<a href="/">home</a>
+</body>
+</html>
