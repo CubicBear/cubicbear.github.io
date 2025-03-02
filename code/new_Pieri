@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Pieri</title>
+	
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen"],
+          evalButtonText: 'Activate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles","fullScreen"], 
+          evalButtonText: 'Evaluate'});
+</script>
+<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>
+   <script type="text/javascript">
+      MathJax = {
+         tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true  
+         },
+         svg: {
+            fontCache: 'global'
+         }
+      };
+   </script>
+<style>
+    @font-face {
+        font-family: 'mononoki';
+        src: url('mononoki-Regular.otf') format('opentype'),
+            url('mononoki-Regular.ttf') format('truetype');
+    }
+    * {font-family: 'mononoki', monospace !important;}
+    h1 {font-family: system-ui !important;}
+    h2 {font-family: system-ui !important;}
+    h3 {font-family: system-ui !important;}
+    a {font-family: system-ui !important;}
+</style>
+</head>
+<body>
+<h2>Pieri</h2>
+
+<div id="Activate" visibility: hidden>
+  <script type="text/x-sage">
+R = QQ["x1,x2,y,z,beta"]; x1,x2,y,z,beta = R.gens(); x=x1
+
+
+def block_weight_print(u,d,l,r,i,k,n=None,xx = x1): 
+    # return (str(weight),type,mark,weight,latex(weight))
+    l = list(l); r = list(r)
+    if len([a for a in l if a<=k]) != len([b for b in l if b>k]) : return ( "0", "O", 0,0,"0")
+    if len([a for a in r if a<=k]) != len([b for b in r if b>k]) : return ( "0", "O", 0,0,"0")
+    lA = [i for i in [1..k] if i not in l] + [i for i in l if i >k]
+    rA = [i for i in [1..k] if i not in r] + [i for i in r if i >k]
+    if set(lA+[u])!= set(rA+[d]): return ( "0", "O", 0,0,"0")
+    
+    if u == d <= k: # Piece A
+        if l==r and all(x>d for x in l):
+            return ( "y+t"+str(i) , "A",1, y+xx,"y+t_"+str(i))
+        if l==r and all(x>=d for x in l):
+#             return ( "z" , "F",1, z)
+            return ( "1-βy" , "e",5, 1-beta*y,"1-\\beta y")
+        return ( "0", "O",0,0,"O")
+    if u == d > k: # Piece B
+        if l == r and all(x<u for x in l):
+            return ( "1", "B",1,1,"1")
+        return ("0", "O", 0,0,"0")
+    if u <= k < d: # Piece C
+        if u in l and d in l and all(x<=d for x in r):
+            m = len([x for x in r if x<u])
+            if m == 0: return ("1", "C",2,1,"1")
+            if m == 1: return ("β", "C",4,beta,"\\beta")
+            return ("β^"+str(m), "C",2*m+2,beta^m,"\\beta^{"+str(m)+"}")
+        return ("0", "O",0,0)
+    if d <= k < u: # Piece D
+        if u in r and d in r and all(x>=d for x in l):
+            m = len([x for x in l if x>u])
+            if m == 0: return ("1+βt"+str(i) ,"D",2,1+beta*xx,"1+\\beta t_"+str(i))
+            if m == 1: return ("β(1+βt"+str(i)+")","D",4,beta*(1+beta*xx),"\\beta(1+\\beta t_"+str(i)+")")
+            return ( "β^"+str(m)+"(1+βt"+str(i)+")", "D",2*m+2,beta^m*(1+beta*xx),"\\beta^{"+str(m)+"}(1+\\beta t_"+str(i)+")")
+        return ("0", "O",0,0)
+    if u < d <= k: # Piece E
+        if u in l and d in r and all(x>=d for x in r):
+            return ("1-βy","E",1,1-beta*y,"1-\\beta y")
+        return("0", "O",0,"0")
+    if d < u <= k: # Piece F
+        if u in l and d in r and all(x>=d for x in r):
+            m = len([x for x in l if x<u])
+            if m == 0: return ("1+βt"+str(i),       "F",2,1+beta*xx,"1+\\beta t_"+str(i))
+            if m == 1: return ("β(1+βt"+str(i)+")", "F",4,beta*(1+beta*xx),"\\beta(1+\\beta t_"+str(i)+")")
+            return ( "β^"+str(m)+"(1+βt"+str(i)+")", "F",2*m+2,beta^m*(1+beta*xx),"\\beta^{"+str(m)+"}(1+\\beta t_"+str(i)+")")
+        return ("0", "O",0,0)
+    if k < u < d: # Piece G
+        if u in r and d in l and all(x<=d for x in r):
+            m = len([x for x in l if x>u])
+            if m == 0: return ("1", "G",0,1,"1")
+            if m == 1: return ("β", "G",1,beta,"\\beta")
+            return ("β^"+str(m), "G",m+1,beta^m,"\\beta^{"+str(m)+"}")
+        return ("0", "O",0,0,"0")
+    return ("0", "O",0,0,"0")
+
+
+def wt_rec(u1,u2,w1,w2,A):
+    # +-w1-+-w2-+  
+    # A    B    C
+    # +-u1-+-u2-+
+    B = list(A)+[w1]
+    if u1 not in B:
+        return ("OO",0)
+    ind = B.index(u1); B.pop(ind)
+    
+    l = [i for i in [1..k] if i not in A] + [i for i in [k+1..n] if i in A]
+    r = [i for i in [1..k] if i not in B] + [i for i in [k+1..n] if i in B]
+    tile1 = block_weight_print(w1,u1,l,r,1,k,n,x1)
+    if tile1[1]=="O": 
+        return ("OO",0)
+    
+    C = list(B)+[w2]
+    if u2 not in C:
+        return ("OO",0)
+    ind = C.index(u2); C.pop(ind)
+    l = [i for i in [1..k] if i not in B] + [i for i in [k+1..n] if i in B]
+    r = [i for i in [1..k] if i not in C] + [i for i in [k+1..n] if i in C]
+
+    
+def presuw(u,w,k,l=[],N=None):
+    res = ""
+    n = len(u)
+    if N==None: N = max(max(u+[0]),max(w+[0]),max(l+[0]))
+    def Alph(i):
+        if i <=9: return str(i)
+        return chr(97+i-10)
+    cols = [l]
+    for i in range(n):
+        l = cols[i]
+        A = [i for i in [1..k] if i not in l] + [i for i in l if i not in [1..k]]
+        B = list(A)+[w[i]]
+        if u[i] not in B: 
+            B = list(A)
+        else:
+            ind = B.index(u[i]); B.pop(ind)
+        r = [i for i in [1..k] if i not in B] + [i for i in B if i not in [1..k]]
+        cols.append(r)
+#     print(cols)
+
+    for ap in [1..k]:
+        a = k + 1 - ap
+        res+=Alph(a)+""
+        for i in range(n): 
+            if a in cols[i]:
+                if a==w[i]:
+                    res += ">───╮ "
+                elif a<w[i]<=k:
+                    res += ">───┼─"
+                else:
+                    res += ">─────"
+            else:
+                if a==w[i]:
+                    res += ":     "
+                elif a<w[i]<=k:
+                    res += ":   │ "
+                else:
+                    res += ":     "
+                
+            if a in cols[i+1]:
+                if a==u[i]:
+                    res += " ╭───"
+                elif a<u[i]<=k:
+                    res += "─┼───"
+                else:
+                    res += "─────"
+            else:
+                if a==u[i]:
+                    res += "     "
+                elif a<u[i]<=k:
+                    res += " │   "
+                else:
+                    res += "     "
+            if u[i]==w[i]==a not in cols[i]:
+                res = res[:-10]+ "   ╭─<╮   "
+        res+=(">" if a in cols[-1] else ":")+"\n"
+        
+    res+= " +--"+"--+--".join("("+Alph(w[i])+")-"+Alph(u[i])+"-" for i in range(n))+"--+\n"
+    
+    for bp in range(N-k):
+        b = N - bp
+        res+=Alph(b)+""
+        for i in range(n): 
+            if b in cols[i]:
+                if k<w[i]<=b:
+                    res += "<───┼─"
+                else:
+                    res += "<─────"
+            else:
+                if b==w[i]:
+                    res += ":   └─"
+                elif k<w[i]<b:
+                    res += ":   │ "
+                else:
+                    res += ":     "
+            if b in cols[i+1]:
+                if k<u[i]<=b:
+                    res += "─┼───"
+                else:
+                    res += "─────"
+            else:
+                if b==u[i]:
+                    res += "─┘   "
+                elif k<u[i]<b:
+                    res += " │   "
+                else: 
+                    res += "     "
+        res+=("<" if b in cols[-1] else ":")+"\n"
+    res+=" :"
+    for i in range(n):
+        tile_w = block_weight_print(w[i],u[i],cols[i],cols[i+1],i+1,k)
+        res+= tile_w[0].center(10)+":"
+    return res
+        
+# print(presuw_report([3,4],[2,4],2,[1,3]))
+
+# print(presuw_new([2,6,4,3,5,1],[6,3,2,5,4,1],3,[3,4]))
+# print(presuw([2,6,4,3,5,1],[6,3,2,5,4,1],3))
+
+# print(presuw([2,6,4,3,5,1],[6,3,2,5,4,1],3,[3,4]))
+
+def tile(ui,A,k,n): # A = the k-subset of [n], all i<=k on the wall, and j>k not on the wall 
+    l = [i for i in [1..k] if i not in A] + [i for i in A if i>k]
+    for wi in [1..n]: 
+        B = list(A)+[wi]
+        if ui in B:
+            ind = B.index(ui)
+            B.pop(ind)
+            r = [i for i in [1..k] if i not in B] + [i for i in B if i>k]
+            tile_w = block_weight_print(wi,ui,l,r,1,k,n)
+            if tile_w[0] != "0":
+                yield (wi,B)
+        
+# for xxx in tile(1,[1,2],2,5):
+#     print(xxx)
+
+def row(u,A,k,n=None):
+    if n ==None: n = len(u)
+    A = set(A)
+    l = [i for i in [1..k] if i not in A] + [i for i in [k+1..n] if i in A]
+    if len(u)==0:
+        yield ([],[A],[l])
+        return
+    for (w1,B1) in tile(u[0],A,k,n):
+        for (w2,B2,l2) in row(u[1:],B1,k,n):
+            if w1 not in w2:
+                yield ([w1]+w2,[A]+B2,[l]+l2)
+    return
+def row_comp(u,k,n,A=None):
+    if A==None:
+        for A0 in Subsets([1..n],k):
+            for xx in row_comp(u,k,n,A0):
+                yield xx
+        return
+    for (w,B,l) in row(u,A,k,n):
+        A = set(A)
+        if A==B[-1]: 
+            yield (w,B)
+    return
+
+
+def expansion(u,k,quantum=False):
+    u = list(u); n = len(u)
+    A = None
+    if quantum == False: A = [1..k]
+    
+    for xxx in row_comp(u,k,n,A):
+#         print(xxx)
+        w,B = xxx 
+        l = [i for i in [1..k] if i not in B[-1]] + [i for i in B[-1] if i>k]
+#         print(presuw(u,w,k,l))
+        cols = [[i for i in [1..k] if i not in B[j]] + [i for i in B[j] if i>k] for j in range(len(B))]
+        yield (u,w,k,cols)
+#         to_print0, mark0, num_O, q_num, remark = presuw_report(u,w,k)
+#         if num_O == 0:
+#             yield w
+# for xxx in row([1,2,3,4],[1,3],2):
+#     print(xxx)
+  
+
+
+# for xxx in expansion([4,1,3,2],2,True):
+# #     print(xxx[1],xxx[3])
+#     print(presuw(xxx[0],xxx[1],xxx[2],xxx[3][0]))
+
+def find_empty(u,k):
+    rec = {}
+    for (u,w,k,cols) in expansion(u,k,True):
+        if tuple(w) in rec.keys():print("Error: repeated",u)
+        rec[tuple(w)]=cols
+    res = []
+    for i in range(len(u)): 
+        if all(len(rec[w][i])==0 for w in rec):
+            res.append(i)
+    return res
+def print_empty(u,empty_walls):
+    to_print = ""
+    for i in range(len(u)):
+        to_print += ("|" if i in empty_walls else ":")
+        to_print += str(u[i])
+    to_print += ("|" if 0 in empty_walls else ":")
+    return to_print
+  </script>
+</div>
+
+
+<h3>Computation</h3>
+
+
+<div class="compute">
+  <script type="text/x-sage">
+n0 = 6; k0 = 3; u = Permutations(n0).random_element()
+for xxx in expansion(u,k0,True):
+    print(presuw(xxx[0],xxx[1],xxx[2],xxx[3][0]))
+  </script>
+ </div>
+
+<h3>Computation</h3>
+
+
+<div class="compute">
+  <script type="text/x-sage">
+n0 = 6; k0 = 3; 
+for _ in range(10):
+	u = Permutations(n0).random_element()
+	empty_walls = find_empty(u,k0)
+	print(print_empty(u,empty_walls))
+  </script>
+ </div>
+
+<h3>Computation</h3>
+
+<div class="compute">
+  <script type="text/x-sage">
+u=[1,2,4,3]; k0=3
+
+empty_walls = find_empty(u,k0)
+print(print_empty(u,empty_walls))
+
+for xxx in expansion([1,2,4,3],k0,True):
+    print(presuw(xxx[0],xxx[1],xxx[2],xxx[3][0]))
+    print()
+
+  </script>
+</div>
+    
+
+<hr>
+<a href="/">home</a>
+</body>
+</html>
