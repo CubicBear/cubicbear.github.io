@@ -106,7 +106,7 @@ def random_quiver(n):
             else:
                 Q1.append((a,b))
     return random_shuffle_orientation(Q0,Q1,tau)
-n = 6 # must be even
+n = random.choice([6,6,6,8]) # must be even
 Q0,Q1,tau = random_quiver(n)
 vv = [random.choice([1,1,1,2]) for _ in range(n/2)]
 vv = [(vv[i] if i<n/2 else vv[tau(i)]) for i in Q0] 
@@ -362,7 +362,7 @@ By replacing \(i\) and \(\tau i\), we only need to check half of vertices, i.e. 
 for i in Q0_plus: 
     LHS = H(i,u)
     RHS = H(tau(i),-u)
-    print("i=%s"%i, LHS == RHS)
+    print(i, LHS == RHS)
 print("done")
   </script>
 </div>
