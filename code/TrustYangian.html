@@ -1,0 +1,551 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+	
+<title>Coulomb Branches and Symmetric Pairs</title>
+	
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+<script>
+    sagecell.makeSagecell({inputLocation:  '#Activate',
+          template: sagecell.templates.minimal,
+          linked: true,
+          linkKey:"1",
+          autoeval:true,
+          hide:["fullScreen","evalButton"],
+          evalButtonText: 'Generate'});
+    sagecell.makeSagecell({inputLocation: 'div.compute',
+          linked: true,
+          linkKey:"1",
+          hide:["permalinkpermalink","done","sessionFiles","fullScreen"], 
+          evalButtonText: 'Evaluate'});  
+</script>
+<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+   </script>
+   <script type="text/javascript">
+      MathJax = {
+         tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true  
+         },
+         svg: {
+            fontCache: 'global'
+         }
+      };
+   </script>
+<style>
+</style>
+</head>
+<body>
+<h2>Quivers with Involutions and 
+Shifted Twisted Yangians via 
+Coulomb Branches</h2>
+
+<p>
+This page is to examine the proof of the relations in our paper <a href="">TBA</a> for a (small) random quiver and (small) random dimension vectors. 
+Refresh this page to generate a new choice. 
+</p>
+
+<div id="Activate">
+  <script type="text/x-sage">
+import random
+
+def draw(Q0,Q1,tau):
+    for (i,j) in Q1:
+        if (tau(j),tau(i)) not in Q1:
+            Q1.append((tau(j),tau(i)))
+    DynInv = DiGraph({i:[] for i in Q0}, multiedges=True)
+    Dyn = DiGraph({i:[] for i in Q0}, multiedges=True)
+    Inv = Graph({i:[] for i in Q0}, multiedges=True)
+    edge_colors = {"white":[],"red":[]}
+    for (s,t) in Q1:
+        DynInv.add_edge((s,t,True))
+        Dyn.add_edge((s,t,True))
+    for i in Q0: 
+        if i<tau(i):
+            DynInv.add_edge((i,tau(i),"tau"))
+            Inv.add_edge((i,tau(i),False))
+            edge_colors["white"].append((i,tau(i),False))
+            Inv.add_edge((i,tau(i),True))
+            edge_colors["red"].append((i,tau(i),True))
+    DynInv.layout(save_pos=True)
+#     DynInv.layout('spring',save_pos=True)
+#     DynInv.layout('circular',save_pos=True)
+    G1 = Dyn.plot(pos=DynInv.get_pos(),axes=False)
+    G2 = Inv.plot(pos=DynInv.get_pos(),edge_colors=edge_colors,edge_style="--",axes=False)
+    return G2+G1
+# draw(Q0,Q1,tau)
+
+def random_shuffle_orientation(Q0,Q1,tau): 
+    newQ1 = Q1[:]
+    for (i,j) in Q1:
+        if (tau(j),tau(i)) not in newQ1:
+            newQ1.append((tau(j),tau(i)))
+    A = Subsets(range(len(newQ1))).random_element()
+    for a in A: 
+        s,t = newQ1[a]
+        b = newQ1.index((tau(t),tau(s)))
+        newQ1[a] = (t,s)
+        newQ1[b] = (tau(s),tau(t))
+    return (Q0,newQ1,tau)
+def random_quiver(n):
+    Q0 = range(n); 
+    tau = lambda i:n-1-i
+    Q1 = []
+    A = Subsets(Subsets(Q0,2)).random_element()
+    for a,b in A:
+        a,b = min(a,b),max(a,b)
+        p = random.uniform(0, 1)
+        if p>0.3:
+            if (a,b) in Q1:
+                Q1.pop((a,b))
+            else:
+                Q1.append((a,b))
+    return random_shuffle_orientation(Q0,Q1,tau)
+n = 6 # must be even
+Q0,Q1,tau = random_quiver(n)
+vv = [random.choice([1,1,1,2]) for _ in range(n/2)]
+vv = [(vv[i] if i<n/2 else vv[tau(i)]) for i in Q0] 
+ww = [random.choice([0,0,0,0,1,1,1,2]) for _ in range(n)]
+
+
+print("Q0 = %s"%list(Q0))
+print("Q1 = [%s]"%", ".join("%s->%s"%(i,j) for (i,j) in Q1))
+print("tau: %s"%" ".join("%s<-->%s"%(i,tau(i)) for i in range(n/2)))
+print("vv = %s"%vv)
+print("ww = %s"%ww)
+draw(Q0,Q1,tau).show()
+
+
+Q0_plus = [i for i in Q0 if i<tau(i)]
+
+var_ind = []; ind_var = {}
+for i in Q0_plus:
+    for j in range(vv[i]):
+        ind_var[(i,j)]=len(var_ind)
+        var_ind.append((i,j))
+var_ind_fr = []; ind_var_fr = {}
+for i in Q0:
+    for j in range(ww[i]):
+        ind_var_fr[(i,j)]=len(var_ind)+len(var_ind_fr)
+        var_ind_fr.append((i,j))
+# var_ind
+# var_ind_fr 
+
+
+def c(i,j):
+        if i==j: return 2
+        if (i,j) in Q1 or (j,i) in Q1: return -1
+        return 0
+
+def rel(i,j):
+    if i==j: return "%s=%s    "%(i,j)
+    if c(i,j)==0: return "%s -x- %s"%(i,j)
+    if (i,j) in Q1: return "%s-->--%s"%(i,j)
+    if (j,i) in Q1: return "%s--<--%s"%(i,j)
+# -------------------------------------------------------------
+# -------------------------------------------------------------
+    
+Qq = PolynomialRing(QQ,["z","y","a","b","u","v","h"]); 
+z,y,a,b,u,v,h=Qq.gens() # z,y,a,b,c are variables
+
+# h=1
+
+xw_names = ["x"+str(i)+str(j) for (i,j) in var_ind]+["w"+str(i)+str(j) for (i,j) in var_ind_fr] 
+if len(xw_names)<=1: xw_names+= ["x","xx"] # to advoid when there is only one variable
+d_names = ["d"+str(i)+str(j) for (i,j) in var_ind]
+if len(d_names)<=1: d_names+=["d","dd"] # to advoid when there is only one variable
+
+Poly = PolynomialRing(Qq,xw_names)
+# "x" and  is to avoid when there is only one variable
+Poly_K = FractionField(Poly); 
+Diff_Mod = LaurentPolynomialRing(Poly_K,d_names); 
+def Diff(other):
+    if other in Poly_K: other = Diff_Mod(other)
+    return Diff_ele(Diff_Mod,other.dict())
+class Diff_ele(type(Diff_Mod.an_element())):
+    def __mul__(self,other): # re-define multiplication
+        if other in Poly_K: other = Diff_Mod(other); 
+        res = Diff_Mod(0)
+        l_dict = self.dict(); r_dict = other.dict()
+        for ind in l_dict:
+            newvar = list(Poly_K.gens())
+            for i in range(len(ind)): 
+                newvar[i] += ind[i]*h # xij /-> xij + 1
+            for r_ind in r_dict:
+                res += l_dict[ind]*Poly_K(r_dict[r_ind](newvar))*Diff_Mod.monomial(*ind)*Diff_Mod.monomial(*r_ind)
+        return Diff(res)
+    def __inv__(self):
+        res = super().__inv__()
+        return Diff(res)
+    def is_polynomial(self):
+        my_dict = self.dict()
+        for ind in my_dict:
+            coeff = Poly_K(my_dict[ind])
+            den = Poly(coeff.denominator())                
+            if any(coe not in QQ for coe in den.coefficients()):
+#                 print(coeff.denominator())
+#                 print(ind,coeff.denominator())
+                return False
+        return True
+    def is_constant(self):
+        my_dict = self.dict()
+        zero_ind = [0]*len(var_ind)
+        zero_ind = sage.rings.polynomial.polydict.ETuple(zero_ind)
+        if (len(my_dict)==1 and zero_ind in my_dict.keys()) or len(my_dict)==0: return True
+        return False
+
+
+
+
+
+x = {}; w = {}; d = {}
+for i in Q0_plus:
+    x[i] = {}; d[i] = {}
+    x[tau(i)] = {}; d[tau(i)] = {}
+    for j in range(vv[i]):
+        x[i][j] = Poly_K.gens()[ind_var[(i,j)]]
+        d[i][j] = Diff(Diff_Mod.gens()[ind_var[(i,j)]])
+        x[tau(i)][j] = -x[i][j]
+        d[tau(i)][j] = d[i][j]^(-1)
+
+for i in Q0:
+    w[i] = {}
+    for j in range(ww[i]):
+        w[i][j] = Poly_K.gens()[ind_var_fr[(i,j)]]
+
+# print(x)
+# print(d)
+# print(w)
+
+
+# -------------------------------------------------------------
+# -------------------------------------------------------------
+
+
+def comm(X,Y): return X*Y-Y*X
+def brack(X,Y): return X*Y+Y*X
+def Serre(X,Y,Z): return comm(X,comm(Y,Z))
+
+def V(i,var,j = None):
+    # j == None   ==> for all r       ==> return V_i(var)
+    # j a number  ==> for all r != j  ==> return V_{i,j}(var), (skip the j-th factor)
+    # j == True   ==> for all r with var != x[i][r] 
+    #                                 ==> return the product of nonzero factors
+    if j is True:
+        return prod( var - x[i][r] for r in range(vv[i]) if var != x[i][r])
+    return prod( var - x[i][r] for r in range(vv[i]) if r!= j)
+def W(i,var): 
+    return prod( w[i][r]-var for r in range(ww[i]) if r!= j)
+
+def B(i,var): 
+    # var = [r] a list ==> return B_{i,r}; 
+    # otherwise        ==> return B_i(var). 
+    res = Diff(0) 
+    for r in range(vv[i]):
+        factor = 1
+        if type(var)==list: 
+            factor *= -(-x[i][r]-h/2)^(var[0]) * h^(-1)
+        else:
+            factor*= 1/(-var-x[i][r]-h/2) 
+        for (s,t) in Q1: 
+            if s == i:
+                if t == tau(i):
+                    factor*= V(t, x[i][r] + h/2, r)
+                else:
+                    factor*= V(t, x[i][r] + h/2)
+        factor*= W(tau(i),-x[i][r]-h/2) #  old choice: W(tau(i),x[i][r]+h/2)
+        factor*=1/V(i,x[i][r],r)
+        res+= factor*d[i][r]
+    return res
+
+def HH(i,var,Res = None):
+    # Res = None  ==> H_i(var)
+    # Res = True  ==> return the residue of H_i(z) at z = var
+    res = Diff(1)
+    res*= (-1)^(vv[i]-1)
+    res*= W(i,-var)*W(tau(i),var) # old choice: W(i,var)*W(tau(i),-var) 
+    for (s,t) in Q1: 
+        if s == tau(i): res *= V(t,var) 
+        if s == i: res *= V(t,-var) 
+        if t == tau(s) and i in [s,t]:
+            res *= (-1/2 if i==s else 1/2)
+            if Res != True or var!=0:
+                res *= 1/var 
+    res*= 1/V(i,-var + h/2, Res)
+    res*= 1/V(i,-var - h/2, Res)
+    return res 
+
+
+
+def H_circ(i,var):
+    # var = [r] a list ==> return B_{i,r} (only for r>=0); 
+    # otherwise        ==> return B_i(var). 
+    res = 0
+    for r in range(vv[i]):
+        fac1 = 1
+        fac2 = 1
+        if type(var)==list:
+            fac1 *= (1 if var[0]==0 else -(-x[i][r]-h/2)^(var[0]) ) 
+            fac2 *= (1 if var[0]==0 else -(-x[i][r]+h/2)^(var[0]) )
+        else: 
+            fac1 *= 1/(-var-x[i][r]-h/2)
+            fac2 *= 1/(-var-x[i][r]+h/2)
+        fac1 *= HH(i,-x[i][r]-h/2,True)
+        fac2 *= HH(i,-x[i][r]+h/2,True)
+        res+= fac1+fac2
+    if c(i,tau(i))!=0: 
+        fac = 1
+        if type(var)==list:
+            res+= (-HH(i,0,True) if var[0]==0 else 0)
+        else:
+            res+= 1/(var)*HH(i,0,True)
+    return res
+
+def H_poly(k):
+    # return {r:H_{k,r}} for r<0
+    res = {}
+    diffe = Diff(h(k,z)-ho(k,z))
+    my_dict1 = diffe.dict()
+    for ind1 in my_dict1:
+        my_dict2 = Poly(my_dict1[ind1]).dict()
+        for ind2 in my_dict2:
+            new_coe = Qq(my_dict2[ind2])
+            my_dict3 = (new_coe).dict()
+            for ind3 in my_dict3:
+                if -ind3[0]-1 not in res.keys(): res[-ind3[0]-1]=0
+#                 print(my_dict3[ind3]*(Poly.monomial(*ind2))*(Diff_Mod.monomial(*ind1)))
+                res[-ind3[0]-1]+= my_dict3[ind3]*(Poly.monomial(*ind2))*(Diff_Mod.monomial(*ind1))
+    return res
+def H(i,var):
+    # var = [r] a list ==> return B_{i,r}; 
+    # otherwise        ==> return B_i(var). 
+    if type(var)==list:
+        if var[0]>=0: return H_circ(i,var)
+        poly_coeff = H_poly(i)
+        if var[0] in poly_coeff:
+            return poly_coeff[var[0]]
+        return 0
+    else: return HH(i,var)
+    
+# (H(2,z)-H_circ(2,z)).is_constant()
+# (H(2,z)-H_circ(2,z)).is_polynomial()
+
+</script>
+</div>
+
+<p>
+Our choice of Serre generators is the following
+\[B_i(z) =\sum_{r=1}^{v_i}\frac{1}{-z-x_{i,r}-\tfrac{\hbar}{2}} \prod_{h\in Q_1^\theta, \atop s(h)=i}V_{\tau i,r}(x_{i,r}+\tfrac{\hbar}{2})\prod_{h\notin Q_1^\theta, \atop s(h)=i}V_{t(h)}(x_{i,r}+\tfrac{\hbar}{2})\frac{W_{\tau i}(-x_{i,r}-\tfrac{\hbar}{2})}{V_{i,r}(x_{i,r})}d_{i,r}.\]
+
+\[H_i(u) = (-1)^{v_i-1}\frac{W_i(-u)W_{\tau i}(u)}{V_i(-u+\frac{\hbar}{2})V_i(-u-\tfrac{\hbar}{2})}\prod_{h\in Q_1, \atop s(h)=i}V_{t(h)}(-u)\prod_{h\in Q_1, \atop s(h)=\tau i}V_{t(h)}(u)
+\cdot (2z)^{c_{i,\tau i}}(-1)^{\delta_{i\to \tau(i)}}.\]
+  </p>
+
+<div id="Activate">
+  <script type="text/x-sage">
+
+  </script>
+ </div>
+
+<h3>Relations for \(H_i\)</h3>
+The only non-obvious relation is 
+\[H_i(u)=H_{\tau i}(-u).\]
+By replacing \(i\) and \(\tau i\), we only need to check half of vertices, i.e. we can assume \(i\in Q_0^+\). 
+
+<div class="compute">
+  <script type="text/x-sage">
+for i in Q0_plus: 
+    LHS = H(i,u)
+    RHS = H(tau(i),-u)
+    print("i=%s"%i, LHS == RHS)
+print("done")
+  </script>
+</div>
+    
+<h3>Relations between \(H_i\) and \(B_j\)</h3>
+The relation is 
+\[\begin{aligned}
+&
+\left(u^2-v^2\right)\left[h_i(u), b_j(v)\right]=\frac{c_{i j}-c_{\tau i, j}}{2} \hbar u\left\{h_i(u), b_j(v)\right\}
++\frac{c_{i j}+c_{\tau i, j}}{2} \hbar v\left\{h_i(u), b_j(v)\right\} +\frac{c_{i j} c_{\tau i, j}}{4} \hbar^2\left[h_i(u), b_j(v)\right]
+-\hbar\left[h_i(u), b_{j, 1}\right] 
+-\hbar v\left[h_i(u), b_{j, 0}\right]-\frac{c_{i j}+c_{\tau i, j}}{2} \hbar^2\left\{h_i(u), b_{j, 0}\right\}.
+\end{aligned}\]
+By replacing \(i\) and \(\tau i\), it suffices to assume \(i\in Q_0^+\). 
+Due to time limit, we seperate the cases by \(c_{i,j}\). 
+
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0_plus for j in Q0 if c(i,j)==2]:
+    LHS = (u^2-v^2)*comm(H(i,u),B(j,v))
+    RHS = (c(i,j)-c(tau(i),j))/2*h*u*brack(H(i,u),B(j,v))
+    RHS+= (c(i,j)+c(tau(i),j))/2*h*v*brack(H(i,u),B(j,v))
+    RHS+= (c(i,j)*c(tau(i),j))/4*h^2*comm(H(i,u),B(j,v))
+    RHS+= -h*comm(H(i,u),B(j,[1]))
+    RHS+= -h*v*comm(H(i,u),B(j,[0])) 
+    RHS+= -(c(i,j)+c(tau(i),j))/2*h^2*brack(H(i,u),B(j,[0]))
+    print((i,j),LHS==RHS)
+print("done")
+  </script>
+</div>
+</p> 
+
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0_plus for j in Q0 if c(i,j)==-1]:
+    LHS = (u^2-v^2)*comm(H(i,u),B(j,v))
+    RHS = (c(i,j)-c(tau(i),j))/2*h*u*brack(H(i,u),B(j,v))
+    RHS+= (c(i,j)+c(tau(i),j))/2*h*v*brack(H(i,u),B(j,v))
+    RHS+= (c(i,j)*c(tau(i),j))/4*h^2*comm(H(i,u),B(j,v))
+    RHS+= -h*comm(H(i,u),B(j,[1]))
+    RHS+= -h*v*comm(H(i,u),B(j,[0])) 
+    RHS+= -(c(i,j)+c(tau(i),j))/2*h^2*brack(H(i,u),B(j,[0]))
+    print((i,j),LHS==RHS)
+print("done")
+  </script>
+</div>
+</p> 
+  
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0_plus for j in Q0 if c(i,j)==0]:
+    LHS = (u^2-v^2)*comm(H(i,u),B(j,v))
+    RHS = (c(i,j)-c(tau(i),j))/2*h*u*brack(H(i,u),B(j,v))
+    RHS+= (c(i,j)+c(tau(i),j))/2*h*v*brack(H(i,u),B(j,v))
+    RHS+= (c(i,j)*c(tau(i),j))/4*h^2*comm(H(i,u),B(j,v))
+    RHS+= -h*comm(H(i,u),B(j,[1]))
+    RHS+= -h*v*comm(H(i,u),B(j,[0])) 
+    RHS+= -(c(i,j)+c(tau(i),j))/2*h^2*brack(H(i,u),B(j,[0]))
+    print((i,j),LHS==RHS)
+print("done")
+  </script>
+</div>
+<p>
+
+ 
+<h3>Relations between \(B_i\) and \(B_j\)</h3>
+
+The relation to check is
+\[
+\begin{aligned}
+    (u-v)\left[b_i(u), b_j(v)\right]=&\frac{c_{i j}}{2} \hbar\left\{b_i(u), b_j(v)\right\}+\hbar\left(\left[b_{i, 0}, b_j(v)\right]-\left[b_i(u), b_{j, 0}\right]\right) -\delta_{\tau i, j} \hbar\left(\frac{2 u}{u+v} h_i^{\circ}(u)+\frac{2 v}{u+v} h_j^{\circ}(v)\right).
+\end{aligned}\]
+Similar as above, due to time limit, we seperate the cases by \(c_{i,j}\). 
+  
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0 for j in Q0 if c(i,j)== 2]:
+    a = -c(i,j)/2
+    LHS = (u-v+a*h)*B(i,u)*B(j,v)
+    RHS = (u-v-a*h)*B(j,v)*B(i,u)+h*comm(B(i,[0]),B(j,v))-h*comm(B(i,u),B(j,[0]))
+    rem = 0 
+    if tau(i)==j: 
+        rem +=  -h*( 2*u/(u+v)*H_circ(i,u) + 2*v/(u+v)*H_circ(j,v))
+    print((i,j),LHS - RHS == rem)
+print("done")
+  </script>
+</div>
+<p>
+
+  
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0 for j in Q0 if c(i,j)==-1]:
+    a = -c(i,j)/2
+    LHS = (u-v+a*h)*B(i,u)*B(j,v)
+    RHS = (u-v-a*h)*B(j,v)*B(i,u)+h*comm(B(i,[0]),B(j,v))-h*comm(B(i,u),B(j,[0]))
+    rem = 0 
+    if tau(i)==j: 
+        rem +=  -h*( 2*u/(u+v)*H_circ(i,u) + 2*v/(u+v)*H_circ(j,v))
+    print((i,j),LHS - RHS == rem)
+print("done")
+  </script>
+</div>
+<p>
+  
+  
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0 for j in Q0 if c(i,j)==0]:
+    a = -c(i,j)/2
+    LHS = (u-v+a*h)*B(i,u)*B(j,v)
+    RHS = (u-v-a*h)*B(j,v)*B(i,u)+h*comm(B(i,[0]),B(j,v))-h*comm(B(i,u),B(j,[0]))
+    rem = 0 
+    if tau(i)==j: 
+        rem +=  -h*( 2*u/(u+v)*H_circ(i,u) + 2*v/(u+v)*H_circ(j,v))
+    print((i,j),LHS - RHS == rem)
+print("done")
+  </script>
+</div>
+<p>
+
+  
+<h3>Serre Relations</h3>
+
+If \(c_{ij}=0\), then 
+\[(u+v)\left[b_i(u), b_j(v)\right]=\delta_{\tau i, j}\hbar\left(h_j^\circ(v)-h_i^\circ(u)\right).\]
+  
+
+
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0_plus for j in Q0 if c(i,j)==0]:
+    LHS = (u+v)*comm(B(i,u),B(j,v))
+    RHS = 0
+    if tau(i)==j: 
+        RHS +=  h*(H_circ(j,v) - H_circ(i,u))
+    print((i,j),LHS == RHS)
+print("done")
+  </script>
+</div>
+<p>
+
+  
+If \(c_{ij}=-1\) and \(j \neq \tau i\neq i\), then 
+\[\operatorname{Sym}_{u_1, u_2}\left[b_i(u_1),\left[b_i(u_2), b_j(v)\right]\right]=0.\]
+
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0 for j in Q0 if c(i,j)==-1 and j!=tau(i)]:
+    LHS = Serre(B(i,u),B(i,v),B(j,z))
+    LHS+= Serre(B(i,v),B(i,u),B(j,z))
+    print((i,j),LHS == 0)
+print("done")
+  </script>
+</div>
+<p>
+  
+  
+If \(c_{ij}=-1\) and \(j=\tau i\), then we proved in our paper that it suffices to check
+\[[b_{i,0},[b_{i,0},b_{\tau(i)}(z)]]=\left(4v
+    \hbar ^{-1}[b_i(3z), h_{\tau(i)}(z)]\right)^\circ.\]
+
+<p>
+<div class="compute">
+  <script type="text/x-sage">
+for i,j in [(i,j) for i in Q0 for j in Q0 if c(i,j)==-1 and j==tau(i)]:
+    LHS = Serre(B(i,[0]),B(i,[0]),B(j,z)) 
+    rem = -4*z*h^(-1)*comm(B(i,3*z),H(j,z))
+    print((i,j),(LHS+rem).is_polynomial())
+print("done")
+  </script>
+</div>
+<p>
+  
+<hr>
+<a href="/">home</a>
+</body>
+</html>
