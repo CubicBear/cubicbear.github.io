@@ -2,3 +2,16 @@
     h1 {text-align:center;}
     h2 {color:#F6F6F6;background-color:DarkSlateGray;;padding:1%}
     a:link  {color:DarkBlue}
+/* ---------- Dark mode: used automatically when the browser/OS is in dark mode ---------- */
+:root {color-scheme: light dark;}  /* dark scrollbars etc. in dark mode */
+@media (prefers-color-scheme: dark) {
+    body      {color:#DCDCEB; background-color:#1A1B22;}
+    h2        {color:#F6F6F6; background-color:#2F4F4F;}   /* same DarkSlateGray bar */
+    a:link    {color:#8AB4F8;}                             /* light blue instead of DarkBlue */
+    a:visited {color:#C9A0F5;}                             /* light purple for visited links */
+    .abstract {color:#9ED69E !important;}                  /* overrides the DarkGreen set by the script */
+
+    /* light-colored boxes on other pages: GRT.html (.intro, .talk), Toric.html and affine.html (yellow tables) */
+    .intro, table[style*="FFFFE0" i] {background-color:#34311C !important;}  /* dark yellow */
+    .talk                            {background-color:#1C3438 !important;}  /* dark cyan */
+}
